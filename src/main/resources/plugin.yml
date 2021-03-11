@@ -1,0 +1,10 @@
+name: TimeBar
+version: ${project.version}
+main: lol.hyper.timebar.TimeBar
+api-version: 1.16
+authors: [ hyperdefined ]
+commands:
+  timebar:
+    aliases: [tb]
+    usage: /timebar
+    description: Main command.

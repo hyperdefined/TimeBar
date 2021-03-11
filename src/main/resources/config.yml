@@ -1,0 +1,5 @@
+# Set the overworld name here if you have changed it.
+overworld: "world"
+
+# If you want to remove the timebar when a player is not in the overworld.
+show-time-in-other-worlds: false
