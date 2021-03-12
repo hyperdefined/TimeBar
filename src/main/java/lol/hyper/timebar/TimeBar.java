@@ -25,6 +25,7 @@ public final class TimeBar extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        loadConfig();
         events =  new Events(this);
         commandReload = new CommandReload(this);
 
@@ -37,7 +38,7 @@ public final class TimeBar extends JavaPlugin {
         timeBarTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             double time = Bukkit.getWorld("world").getTime();
             timeTracker.setProgress(time / 24000.0);
-            if (time >= 23000 && time < 0) {
+            if (time >= 23000) {
                 timeTracker.setTitle("Dawn (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
             }
             if (time >= 0 && time < 6000) {
