@@ -3,3 +3,6 @@ overworld: "world"
 
 # If you want to remove the timebar when a player is not in the overworld.
 show-time-in-other-worlds: false
+
+# No touch please :)
+config-version: 1
