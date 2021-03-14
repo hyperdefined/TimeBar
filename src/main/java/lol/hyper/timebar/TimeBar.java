@@ -78,7 +78,7 @@ public final class TimeBar extends JavaPlugin {
             timeTracker.setColor(BarColor.BLUE);
         }
         if (config.getString("bar-color").equalsIgnoreCase("green")) {
-            timeTracker.setColor(BarColor.GREEN;
+            timeTracker.setColor(BarColor.GREEN);
         }
         if (config.getString("bar-color").equalsIgnoreCase("pink")) {
             timeTracker.setColor(BarColor.PINK);
