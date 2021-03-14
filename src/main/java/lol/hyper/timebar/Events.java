@@ -28,7 +28,7 @@ public class Events implements Listener {
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
         // Check if we gotta remove the timebar when the player moves worlds
-        if (!timeBar.config.getBoolean("show-time-in-other-worlds")) {
+        if (timeBar.config.getBoolean("show-time-in-other-worlds")) {
             return;
         }
 
