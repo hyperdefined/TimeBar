@@ -1,5 +1,6 @@
-package lol.hyper.timebar;
+package lol.hyper.timebar.events;
 
+import lol.hyper.timebar.TimeBar;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

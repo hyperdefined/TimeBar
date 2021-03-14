@@ -1,5 +1,7 @@
 package lol.hyper.timebar;
 
+import lol.hyper.timebar.commands.CommandReload;
+import lol.hyper.timebar.events.Events;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;

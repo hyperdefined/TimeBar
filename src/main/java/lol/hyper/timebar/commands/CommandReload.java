@@ -1,5 +1,6 @@
-package lol.hyper.timebar;
+package lol.hyper.timebar.commands;
 
+import lol.hyper.timebar.TimeBar;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
