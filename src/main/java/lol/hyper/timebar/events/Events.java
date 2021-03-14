@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class Events implements Listener {
 
@@ -18,7 +19,12 @@ public class Events implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        timeBar.timeTracker.addPlayer(event.getPlayer());
+        World world = event.getPlayer().getWorld();
+        if (!timeBar.config.getStringList("worlds-to-show-in").contains(world.getName())) {
+            timeBar.timeTracker.removePlayer(event.getPlayer());
+        } else {
+            timeBar.timeTracker.addPlayer(event.getPlayer());
+        }
     }
 
     @EventHandler
@@ -27,20 +33,21 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onWorldChange(PlayerChangedWorldEvent event) {
-        // Check if we gotta remove the timebar when the player moves worlds
-        if (timeBar.config.getBoolean("show-time-in-other-worlds")) {
+    public void onWorldChange(PlayerTeleportEvent event) {
+        // Check the worlds list in the config, if it's empty, then we can ignore this event
+        if (timeBar.config.getStringList("worlds-to-show-in").isEmpty()) {
             return;
         }
 
-        World world = event.getFrom();
+        World worldTo = event.getTo().getWorld();
 
-        // If the player travels overworld -> any other world, remove the bar
-        // If the player travels any other world -> overworld, add the bar
-        if (world.getName().equalsIgnoreCase(timeBar.config.getString("overworld"))) {
-            timeBar.timeTracker.removePlayer(event.getPlayer());
-        } else {
+        // Check to see if the player is going to a world that the TimeBar is enabled in
+        // If the player goes to a world on the list, show them the bar
+        // If not, remove it
+        if (timeBar.config.getStringList("worlds-to-show-in").contains(worldTo.getName())) {
             timeBar.timeTracker.addPlayer(event.getPlayer());
+        } else {
+            timeBar.timeTracker.removePlayer(event.getPlayer());
         }
     }
 }

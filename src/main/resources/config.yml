@@ -1,8 +1,10 @@
-# Set the overworld name here if you have changed it.
-overworld: "world"
+# Set which worlds the TimeBar will show.
+worlds-to-show-in:
+  - "world"
 
-# If you want to remove the timebar when a player is not in the overworld.
-show-time-in-other-worlds: false
+# Set the color of the TimeBar.
+# The valid options are: blue, green, pink, purple, red, white, and yellow.
+bar-color: "blue"
 
 # No touch please :)
 config-version: 1

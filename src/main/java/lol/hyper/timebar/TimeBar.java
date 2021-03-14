@@ -73,6 +73,29 @@ public final class TimeBar extends JavaPlugin {
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("You configuration is out of date! Some features may not work!");
         }
+
+        if (config.getString("bar-color").equalsIgnoreCase("blue")) {
+            timeTracker.setColor(BarColor.BLUE);
+        }
+        if (config.getString("bar-color").equalsIgnoreCase("green")) {
+            timeTracker.setColor(BarColor.GREEN;
+        }
+        if (config.getString("bar-color").equalsIgnoreCase("pink")) {
+            timeTracker.setColor(BarColor.PINK);
+        }
+        if (config.getString("bar-color").equalsIgnoreCase("purple")) {
+            timeTracker.setColor(BarColor.PURPLE);
+        }
+        if (config.getString("bar-color").equalsIgnoreCase("red")) {
+            timeTracker.setColor(BarColor.RED);
+        }
+        if (config.getString("bar-color").equalsIgnoreCase("white")) {
+            timeTracker.setColor(BarColor.WHITE);
+        }
+        if (config.getString("bar-color").equalsIgnoreCase("yellow")) {
+            timeTracker.setColor(BarColor.YELLOW);
+        }
+
         startTimer();
     }
 }
