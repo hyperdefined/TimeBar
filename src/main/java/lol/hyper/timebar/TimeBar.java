@@ -21,6 +21,8 @@ public final class TimeBar extends JavaPlugin {
     public FileConfiguration config;
     public final Logger logger = this.getLogger();
     public int timeBarTask;
+    public String timebarTitle = "";
+    public String worldName = "";
 
     public Events events;
     public CommandReload commandReload;
@@ -41,25 +43,25 @@ public final class TimeBar extends JavaPlugin {
             double time = Bukkit.getWorld("world").getTime();
             timeTracker.setProgress(time / 24000.0);
             if (time >= 23000) {
-                timeTracker.setTitle("Dawn (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
+                timeTracker.setTitle(parseString("Dawn"));
             }
             if (time >= 0 && time < 6000) {
-                timeTracker.setTitle("Morning (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
+                timeTracker.setTitle(parseString("Morning"));
             }
             if (time >= 6000 && time < 9000) {
-                timeTracker.setTitle("Noon (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
+                timeTracker.setTitle(parseString("Noon"));
             }
             if (time >= 9000 && time < 12000) {
-                timeTracker.setTitle("Afternoon (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
+                timeTracker.setTitle(parseString("Afternoon"));
             }
             if (time >= 12000 && time < 14000) {
-                timeTracker.setTitle("Sunset (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
+                timeTracker.setTitle(parseString("Sunset"));
             }
             if (time >= 14000 && time < 18000) {
-                timeTracker.setTitle("Night (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
+                timeTracker.setTitle(parseString("Night"));
             }
             if (time >= 18000 && time < 23000) {
-                timeTracker.setTitle("Midnight (Day " + Bukkit.getWorld("world").getFullTime() / 24000 + ")");
+                timeTracker.setTitle(parseString("Midnight"));
             }
         }, 0, 20);
     }
@@ -74,28 +76,45 @@ public final class TimeBar extends JavaPlugin {
             logger.warning("You configuration is out of date! Some features may not work!");
         }
 
-        if (config.getString("bar-color").equalsIgnoreCase("blue")) {
+        timebarTitle = config.getString("timebar-title");
+        worldName = config.getString("world-to-track-time");
+
+        String color = config.getString("titlebar-color");
+        if (color.equalsIgnoreCase("blue")) {
             timeTracker.setColor(BarColor.BLUE);
         }
-        if (config.getString("bar-color").equalsIgnoreCase("green")) {
+        if (color.equalsIgnoreCase("green")) {
             timeTracker.setColor(BarColor.GREEN);
         }
-        if (config.getString("bar-color").equalsIgnoreCase("pink")) {
+        if (color.equalsIgnoreCase("pink")) {
             timeTracker.setColor(BarColor.PINK);
         }
-        if (config.getString("bar-color").equalsIgnoreCase("purple")) {
+        if (color.equalsIgnoreCase("purple")) {
             timeTracker.setColor(BarColor.PURPLE);
         }
-        if (config.getString("bar-color").equalsIgnoreCase("red")) {
+        if (color.equalsIgnoreCase("red")) {
             timeTracker.setColor(BarColor.RED);
         }
-        if (config.getString("bar-color").equalsIgnoreCase("white")) {
+        if (color.equalsIgnoreCase("white")) {
             timeTracker.setColor(BarColor.WHITE);
         }
-        if (config.getString("bar-color").equalsIgnoreCase("yellow")) {
+        if (color.equalsIgnoreCase("yellow")) {
             timeTracker.setColor(BarColor.YELLOW);
         }
 
         startTimer();
+    }
+
+    private String parseString(String time) {
+        String title = "";
+
+        if (timebarTitle.contains("{TIME}")) {
+            title = timebarTitle.replace("{TIME}", time);
+        }
+
+        if (timebarTitle.contains("{DAYCOUNT}")) {
+            title = timebarTitle.replace("{TIME}", String.valueOf(Bukkit.getWorld(worldName).getFullTime() / 24000));
+        }
+        return title;
     }
 }

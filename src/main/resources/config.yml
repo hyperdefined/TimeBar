@@ -1,10 +1,18 @@
-# Set which worlds the TimeBar will show.
+# Set which world will TimeBar show the time for.
+world-to-track-time: "world"
+
+# Set which worlds the TimeBar will show in.
 worlds-to-show-in:
   - "world"
 
 # Set the color of the TimeBar.
 # The valid options are: blue, green, pink, purple, red, white, and yellow.
-bar-color: "blue"
+titlebar-color: "blue"
+
+# Set the text of the TimeBar.
+# {TIME} - The time to display. Dawn, afternoon, etc.
+# {DAYCOUNT} - How many total days in game have passed.
+timebar-title: "{TIME} (Day {DAYCOUNT})"
 
 # No touch please :)
 config-version: 1
