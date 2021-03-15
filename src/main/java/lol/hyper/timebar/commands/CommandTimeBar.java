@@ -10,11 +10,11 @@ import org.bukkit.command.TabExecutor;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandReload implements TabExecutor {
+public class CommandTimeBar implements TabExecutor {
 
     private final TimeBar timeBar;
 
-    public CommandReload(TimeBar timeBar) {
+    public CommandTimeBar(TimeBar timeBar) {
         this.timeBar = timeBar;
     }
 

@@ -1,6 +1,6 @@
 package lol.hyper.timebar;
 
-import lol.hyper.timebar.commands.CommandReload;
+import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.Events;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -24,13 +24,13 @@ public final class TimeBar extends JavaPlugin {
     public String worldName = "";
 
     public Events events;
-    public CommandReload commandReload;
+    public CommandTimeBar commandReload;
 
     @Override
     public void onEnable() {
         loadConfig();
         events =  new Events(this);
-        commandReload = new CommandReload(this);
+        commandReload = new CommandTimeBar(this);
 
         this.getCommand("timebar").setExecutor(commandReload);
 
