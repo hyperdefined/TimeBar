@@ -21,7 +21,6 @@ public final class TimeBar extends JavaPlugin {
     public FileConfiguration config;
     public final Logger logger = this.getLogger();
     public int timeBarTask;
-    public String timebarTitle = "";
     public String worldName = "";
 
     public Events events;
@@ -76,7 +75,6 @@ public final class TimeBar extends JavaPlugin {
             logger.warning("You configuration is out of date! Some features may not work!");
         }
 
-        timebarTitle = config.getString("timebar-title");
         worldName = config.getString("world-to-track-time");
 
         String color = config.getString("titlebar-color");
@@ -106,14 +104,14 @@ public final class TimeBar extends JavaPlugin {
     }
 
     private String parseString(String time) {
-        String title = "";
+        String title = config.getString("timebar-title");
 
-        if (timebarTitle.contains("{TIME}")) {
-            title = timebarTitle.replace("{TIME}", time);
+        if (title.contains("{TIME}")) {
+            title = title.replace("{TIME}", time);
         }
 
-        if (timebarTitle.contains("{DAYCOUNT}")) {
-            title = timebarTitle.replace("{TIME}", String.valueOf(Bukkit.getWorld(worldName).getFullTime() / 24000));
+        if (title.contains("{DAYCOUNT}")) {
+            title = title.replace("{DAYCOUNT}", String.valueOf(Bukkit.getWorld(worldName).getFullTime() / 24000));
         }
         return title;
     }
