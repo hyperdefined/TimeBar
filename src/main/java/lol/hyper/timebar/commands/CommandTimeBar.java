@@ -9,6 +9,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class CommandTimeBar implements TabExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("on")) {
                 if (sender instanceof ConsoleCommandSender) {
-                    sender.sendMessage(ChatColor.RED + "You must be a player for this command");
+                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
                     return true;
                 }
                 Player player = (Player) sender;
@@ -47,7 +48,7 @@ public class CommandTimeBar implements TabExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("off")) {
                 if (sender instanceof ConsoleCommandSender) {
-                    sender.sendMessage(ChatColor.RED + "You must be a player for this command");
+                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
                     return true;
                 }
                 Player player = (Player) sender;
@@ -66,6 +67,6 @@ public class CommandTimeBar implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return Collections.singletonList("reload");
+        return Arrays.asList("reload", "on", "off");
     }
 }
