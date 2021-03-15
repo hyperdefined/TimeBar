@@ -24,10 +24,10 @@ public class CommandTimeBar implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.GREEN + "RandomEnchant version " + timeBar.getDescription().getVersion() + ". Created by hyperdefined.");
+            sender.sendMessage(ChatColor.GREEN + "TimeBar version " + timeBar.getDescription().getVersion() + ". Created by hyperdefined.");
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
-                if (sender.isOp() || sender.hasPermission("randomenchant.reload")) {
+                if (sender.isOp() || sender.hasPermission("timebar.reload")) {
                     Bukkit.getScheduler().cancelTask(timeBar.timeBarTask);
                     timeBar.loadConfig();
                     sender.sendMessage(ChatColor.GREEN + "Configuration reloaded!");
