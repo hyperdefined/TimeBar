@@ -6,9 +6,9 @@ TimeBar let's you visualize the current world time as a bossbar. See the time of
 ![Image](https://raw.githubusercontent.com/hyperdefined/TimeBar/master/example.gif)
 
 ## Features
-* Customize how the bar looks on your screen.
-* Show the bar in certain worlds.
-* Disable the bar with a command if you don't want to see it.
+* Customize how TimeBar looks on your screen.
+* Show TimeBar in certain worlds.
+* Disable TimeBar with a command if you don't want to see it.
 
 ## Documentation
 Visit the [wiki](https://github.com/hyperdefined/TimeBar/wiki) for help.
