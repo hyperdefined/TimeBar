@@ -2,6 +2,7 @@ package lol.hyper.timebar;
 
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.Events;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -35,6 +36,8 @@ public final class TimeBar extends JavaPlugin {
         this.getCommand("timebar").setExecutor(commandReload);
 
         Bukkit.getServer().getPluginManager().registerEvents(events, this);
+
+        Metrics metrics = new Metrics(this, 10674);
     }
 
     private void startTimer() {
