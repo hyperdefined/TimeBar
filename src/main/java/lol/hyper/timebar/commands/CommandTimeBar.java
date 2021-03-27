@@ -10,7 +10,6 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class CommandTimeBar implements TabExecutor {
@@ -66,7 +65,7 @@ public class CommandTimeBar implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List < String > onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         return Arrays.asList("reload", "on", "off");
     }
 }

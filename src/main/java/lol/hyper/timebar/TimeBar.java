@@ -30,7 +30,7 @@ public final class TimeBar extends JavaPlugin {
     @Override
     public void onEnable() {
         loadConfig();
-        events =  new Events(this);
+        events = new Events(this);
         commandReload = new CommandTimeBar(this);
 
         this.getCommand("timebar").setExecutor(commandReload);
@@ -42,29 +42,29 @@ public final class TimeBar extends JavaPlugin {
 
     private void startTimer() {
         timeBarTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            double time = Bukkit.getWorld("world").getTime();
-            timeTracker.setProgress(time / 24000.0);
-            if (time >= 23000) {
-                timeTracker.setTitle(parseString("Dawn"));
-            }
-            if (time >= 0 && time < 6000) {
-                timeTracker.setTitle(parseString("Morning"));
-            }
-            if (time >= 6000 && time < 9000) {
-                timeTracker.setTitle(parseString("Noon"));
-            }
-            if (time >= 9000 && time < 12000) {
-                timeTracker.setTitle(parseString("Afternoon"));
-            }
-            if (time >= 12000 && time < 14000) {
-                timeTracker.setTitle(parseString("Sunset"));
-            }
-            if (time >= 14000 && time < 18000) {
-                timeTracker.setTitle(parseString("Night"));
-            }
-            if (time >= 18000 && time < 23000) {
-                timeTracker.setTitle(parseString("Midnight"));
-            }
+        double time = Bukkit.getWorld("world").getTime();
+        timeTracker.setProgress(time / 24000.0);
+        if (time >= 23000) {
+            timeTracker.setTitle(parseString("Dawn"));
+        }
+        if (time >= 0 && time < 6000) {
+            timeTracker.setTitle(parseString("Morning"));
+        }
+        if (time >= 6000 && time < 9000) {
+            timeTracker.setTitle(parseString("Noon"));
+        }
+        if (time >= 9000 && time < 12000) {
+            timeTracker.setTitle(parseString("Afternoon"));
+        }
+        if (time >= 12000 && time < 14000) {
+            timeTracker.setTitle(parseString("Sunset"));
+        }
+        if (time >= 14000 && time < 18000) {
+            timeTracker.setTitle(parseString("Night"));
+        }
+        if (time >= 18000 && time < 23000) {
+            timeTracker.setTitle(parseString("Midnight"));
+        }
         }, 0, 20);
     }
 
