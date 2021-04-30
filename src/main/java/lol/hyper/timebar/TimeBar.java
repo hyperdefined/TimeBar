@@ -105,6 +105,11 @@ public final class TimeBar extends JavaPlugin {
 
         worldName = config.getString("world-to-track-time");
 
+        if (Bukkit.getWorld(worldName) == null) {
+            logger.severe(worldName + " is not a valid world! Using default \"world\" instead.");
+            worldName = "world";
+        }
+
         String color = config.getString("titlebar-color");
         if (color.equalsIgnoreCase("blue")) {
             timeTracker.setColor(BarColor.BLUE);
