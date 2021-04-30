@@ -54,7 +54,15 @@ public final class TimeBar extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents(events, this);
 
-        Metrics metrics = new Metrics(this, 10674);
+        Metrics metrics = new Metrics(this, 90179);
+
+        new UpdateChecker(this, 91822).getVersion(version -> {
+            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                logger.info("You are running the latest version.");
+            } else {
+                logger.info("There is a new version available! Please download at https://www.spigotmc.org/resources/timebar.90179/");
+            }
+        });
     }
 
     private void startTimer() {
