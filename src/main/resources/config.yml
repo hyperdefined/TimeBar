@@ -14,5 +14,16 @@ titlebar-color: "blue"
 # {DAYCOUNT} - How many total days in game have passed.
 timebar-title: "{TIME} (Day {DAYCOUNT})"
 
+# Want to change the wording of the times?
+times:
+  dawn: "Dawn"
+  morning: "Morning"
+  noon: "Noon"
+  afternoon: "Afternoon"
+  sunset: "Sunset"
+  night: "Night"
+  midnight: "Midnight"
+
+
 # No touch please :)
-config-version: 1
+config-version: 2

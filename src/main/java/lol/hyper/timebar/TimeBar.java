@@ -62,25 +62,25 @@ public final class TimeBar extends JavaPlugin {
         double time = Bukkit.getWorld("world").getTime();
         timeTracker.setProgress(time / 24000.0);
         if (time >= 23000) {
-            timeTracker.setTitle(parseString("Dawn"));
+            timeTracker.setTitle(parseString(config.getString("times.dawn")));
         }
         if (time >= 0 && time < 6000) {
-            timeTracker.setTitle(parseString("Morning"));
+            timeTracker.setTitle(parseString(config.getString("times.morning")));
         }
         if (time >= 6000 && time < 9000) {
-            timeTracker.setTitle(parseString("Noon"));
+            timeTracker.setTitle(parseString(config.getString("times.noon")));
         }
         if (time >= 9000 && time < 12000) {
-            timeTracker.setTitle(parseString("Afternoon"));
+            timeTracker.setTitle(parseString(config.getString("times.afternoon")));
         }
         if (time >= 12000 && time < 14000) {
-            timeTracker.setTitle(parseString("Sunset"));
+            timeTracker.setTitle(parseString(config.getString("times.sunset")));
         }
         if (time >= 14000 && time < 18000) {
-            timeTracker.setTitle(parseString("Night"));
+            timeTracker.setTitle(parseString(config.getString("times.night")));
         }
         if (time >= 18000 && time < 23000) {
-            timeTracker.setTitle(parseString("Midnight"));
+            timeTracker.setTitle(parseString(config.getString("times.midnight")));
         }
         }, 0, 20);
     }
@@ -90,7 +90,7 @@ public final class TimeBar extends JavaPlugin {
             this.saveResource("config.yml", true);
         }
         config = YamlConfiguration.loadConfiguration(configFile);
-        int CONFIG_VERSION = 1;
+        int CONFIG_VERSION = 2;
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("You configuration is out of date! Some features may not work!");
         }
