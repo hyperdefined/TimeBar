@@ -33,11 +33,10 @@ import java.util.logging.Logger;
 
 public final class TimeBar extends JavaPlugin {
 
-    public BossBar timeTracker = Bukkit.createBossBar("World Time", BarColor.BLUE, BarStyle.SOLID);
-
     public final File configFile = new File(this.getDataFolder(), "config.yml");
-    public FileConfiguration config;
     public final Logger logger = this.getLogger();
+    public BossBar timeTracker = Bukkit.createBossBar("World Time", BarColor.BLUE, BarStyle.SOLID);
+    public FileConfiguration config;
     public int timeBarTask;
     public String worldName = "";
 
@@ -60,37 +59,43 @@ public final class TimeBar extends JavaPlugin {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                 logger.info("You are running the latest version.");
             } else {
-                logger.info("There is a new version available! Please download at https://www.spigotmc.org/resources/timebar.90179/");
+                logger.info(
+                        "There is a new version available! Please download at https://www.spigotmc.org/resources/timebar.90179/");
             }
         });
     }
 
     private void startTimer() {
-        timeBarTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-        double time = Bukkit.getWorld("world").getTime();
-        timeTracker.setProgress(time / 24000.0);
-        if (time >= 23000) {
-            timeTracker.setTitle(parseString(config.getString("times.dawn")));
-        }
-        if (time >= 0 && time < 6000) {
-            timeTracker.setTitle(parseString(config.getString("times.morning")));
-        }
-        if (time >= 6000 && time < 9000) {
-            timeTracker.setTitle(parseString(config.getString("times.noon")));
-        }
-        if (time >= 9000 && time < 12000) {
-            timeTracker.setTitle(parseString(config.getString("times.afternoon")));
-        }
-        if (time >= 12000 && time < 14000) {
-            timeTracker.setTitle(parseString(config.getString("times.sunset")));
-        }
-        if (time >= 14000 && time < 18000) {
-            timeTracker.setTitle(parseString(config.getString("times.night")));
-        }
-        if (time >= 18000 && time < 23000) {
-            timeTracker.setTitle(parseString(config.getString("times.midnight")));
-        }
-        }, 0, 20);
+        timeBarTask = Bukkit.getScheduler()
+                .scheduleSyncRepeatingTask(
+                        this,
+                        () -> {
+                            double time = Bukkit.getWorld("world").getTime();
+                            timeTracker.setProgress(time / 24000.0);
+                            if (time >= 23000) {
+                                timeTracker.setTitle(parseString(config.getString("times.dawn")));
+                            }
+                            if (time >= 0 && time < 6000) {
+                                timeTracker.setTitle(parseString(config.getString("times.morning")));
+                            }
+                            if (time >= 6000 && time < 9000) {
+                                timeTracker.setTitle(parseString(config.getString("times.noon")));
+                            }
+                            if (time >= 9000 && time < 12000) {
+                                timeTracker.setTitle(parseString(config.getString("times.afternoon")));
+                            }
+                            if (time >= 12000 && time < 14000) {
+                                timeTracker.setTitle(parseString(config.getString("times.sunset")));
+                            }
+                            if (time >= 14000 && time < 18000) {
+                                timeTracker.setTitle(parseString(config.getString("times.night")));
+                            }
+                            if (time >= 18000 && time < 23000) {
+                                timeTracker.setTitle(parseString(config.getString("times.midnight")));
+                            }
+                        },
+                        0,
+                        20);
     }
 
     public void loadConfig() {
@@ -144,7 +149,8 @@ public final class TimeBar extends JavaPlugin {
         }
 
         if (title.contains("{DAYCOUNT}")) {
-            title = title.replace("{DAYCOUNT}", String.valueOf(Bukkit.getWorld(worldName).getFullTime() / 24000));
+            title = title.replace(
+                    "{DAYCOUNT}", String.valueOf(Bukkit.getWorld(worldName).getFullTime() / 24000));
         }
         return title;
     }
