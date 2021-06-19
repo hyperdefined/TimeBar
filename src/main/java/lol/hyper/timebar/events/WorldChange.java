@@ -21,31 +21,14 @@ import lol.hyper.timebar.TimeBar;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class Events implements Listener {
+public class WorldChange implements Listener {
 
     private final TimeBar timeBar;
 
-    public Events(TimeBar timeBar) {
+    public WorldChange(TimeBar timeBar) {
         this.timeBar = timeBar;
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        World world = event.getPlayer().getWorld();
-        if (!timeBar.config.getStringList("worlds-to-show-in").contains(world.getName())) {
-            timeBar.timeTracker.removePlayer(event.getPlayer());
-        } else {
-            timeBar.timeTracker.addPlayer(event.getPlayer());
-        }
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        timeBar.timeTracker.removePlayer(event.getPlayer());
     }
 
     @EventHandler

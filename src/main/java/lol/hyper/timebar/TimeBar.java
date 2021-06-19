@@ -18,7 +18,9 @@
 package lol.hyper.timebar;
 
 import lol.hyper.timebar.commands.CommandTimeBar;
-import lol.hyper.timebar.events.Events;
+import lol.hyper.timebar.events.PlayerJoinLeave;
+import lol.hyper.timebar.events.WorldChange;
+import lol.hyper.timebar.tools.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -40,18 +42,21 @@ public final class TimeBar extends JavaPlugin {
     public int timeBarTask;
     public String worldName = "";
 
-    public Events events;
+    public PlayerJoinLeave playerJoinLeave;
+    public WorldChange worldChange;
     public CommandTimeBar commandReload;
 
     @Override
     public void onEnable() {
         loadConfig();
-        events = new Events(this);
+        playerJoinLeave = new PlayerJoinLeave(this);
+        worldChange = new WorldChange(this);
         commandReload = new CommandTimeBar(this);
 
         this.getCommand("timebar").setExecutor(commandReload);
 
-        Bukkit.getServer().getPluginManager().registerEvents(events, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerJoinLeave, this);
+        Bukkit.getServer().getPluginManager().registerEvents(worldChange, this);
 
         Metrics metrics = new Metrics(this, 90179);
 
