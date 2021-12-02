@@ -2,7 +2,9 @@ name: TimeBar
 version: ${project.version}
 main: lol.hyper.timebar.TimeBar
 api-version: 1.13
-authors: [ hyperdefined ]
+author: hyperdefined
+website: https://www.spigotmc.org/resources/timebar.90179/
+description: See the world's time as a bossbar.
 commands:
   timebar:
     aliases: [tb]
