@@ -22,7 +22,7 @@ TimeBar let's you visualize the current world time as a bossbar. See the time of
 * Disable TimeBar with a command if you don't want to see it.
 
 ## Documentation
-Visit the [wiki](https://docs.hyper.lol/timebar) for help.
+Visit the [wiki](https://github.com/hyperdefined/TimeBar/wiki) for help.
 
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/TimeBar/blob/master/LICENSE).
