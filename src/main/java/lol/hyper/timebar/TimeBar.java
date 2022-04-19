@@ -22,27 +22,36 @@ import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.PlayerJoinLeave;
 import lol.hyper.timebar.events.WorldChange;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public final class TimeBar extends JavaPlugin {
 
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public final Logger logger = this.getLogger();
-    public BossBar timeTracker = Bukkit.createBossBar("World Time", BarColor.BLUE, BarStyle.SOLID);
+    public BossBar timeTracker;
     public FileConfiguration config;
     public int timeBarTask;
     public String worldName = "";
+    public final List<Player> enabledBossBar = new ArrayList<>();
+
+    public final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private BukkitAudiences adventure;
 
     public PlayerJoinLeave playerJoinLeave;
     public WorldChange worldChange;
@@ -50,6 +59,8 @@ public final class TimeBar extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        adventure = BukkitAudiences.create(this);
+        timeTracker = BossBar.bossBar(Component.text("World Time"), 0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
         loadConfig();
         playerJoinLeave = new PlayerJoinLeave(this);
         worldChange = new WorldChange(this);
@@ -71,28 +82,31 @@ public final class TimeBar extends JavaPlugin {
                         this,
                         () -> {
                             double time = Bukkit.getWorld("world").getTime();
-                            timeTracker.setProgress(time / 24000.0);
+                            timeTracker.progress((float) (time / 24000.0));
+                            Component title = Component.text("World Time");
                             if (time >= 23000) {
-                                timeTracker.setTitle(parseString(config.getString("times.dawn")));
+                                title = parseString(config.getString("times.dawn"));
                             }
                             if (time >= 0 && time < 6000) {
-                                timeTracker.setTitle(parseString(config.getString("times.morning")));
+                                title = parseString(config.getString("times.morning"));
                             }
                             if (time >= 6000 && time < 9000) {
-                                timeTracker.setTitle(parseString(config.getString("times.noon")));
+                                title = parseString(config.getString("times.noon"));
                             }
                             if (time >= 9000 && time < 12000) {
-                                timeTracker.setTitle(parseString(config.getString("times.afternoon")));
+                                title = parseString(config.getString("times.afternoon"));
                             }
                             if (time >= 12000 && time < 14000) {
-                                timeTracker.setTitle(parseString(config.getString("times.sunset")));
+                                title = parseString(config.getString("times.sunset"));
                             }
                             if (time >= 14000 && time < 18000) {
-                                timeTracker.setTitle(parseString(config.getString("times.night")));
+                                title = parseString(config.getString("times.night"));
                             }
                             if (time >= 18000 && time < 23000) {
-                                timeTracker.setTitle(parseString(config.getString("times.midnight")));
+                                title = parseString(config.getString("times.midnight"));
                             }
+
+                            timeTracker.name(title);
                         },
                         0,
                         20);
@@ -116,32 +130,18 @@ public final class TimeBar extends JavaPlugin {
         }
 
         String color = config.getString("titlebar-color");
-        if (color.equalsIgnoreCase("blue")) {
-            timeTracker.setColor(BarColor.BLUE);
-        }
-        if (color.equalsIgnoreCase("green")) {
-            timeTracker.setColor(BarColor.GREEN);
-        }
-        if (color.equalsIgnoreCase("pink")) {
-            timeTracker.setColor(BarColor.PINK);
-        }
-        if (color.equalsIgnoreCase("purple")) {
-            timeTracker.setColor(BarColor.PURPLE);
-        }
-        if (color.equalsIgnoreCase("red")) {
-            timeTracker.setColor(BarColor.RED);
-        }
-        if (color.equalsIgnoreCase("white")) {
-            timeTracker.setColor(BarColor.WHITE);
-        }
-        if (color.equalsIgnoreCase("yellow")) {
-            timeTracker.setColor(BarColor.YELLOW);
+        if (color == null) {
+            // default to blue since I like it
+            timeTracker.color(BossBar.Color.BLUE);
+        } else {
+            color = color.toUpperCase(Locale.ROOT);
+            timeTracker.color(BossBar.Color.valueOf(color));
         }
 
         startTimer();
     }
 
-    private String parseString(String time) {
+    private Component parseString(String time) {
         String title = config.getString("timebar-title");
 
         if (title.contains("{TIME}")) {
@@ -152,7 +152,7 @@ public final class TimeBar extends JavaPlugin {
             title = title.replace(
                     "{DAYCOUNT}", String.valueOf(Bukkit.getWorld(worldName).getFullTime() / 24000));
         }
-        return title;
+        return miniMessage.deserialize(title);
     }
 
     public void checkForUpdates() {
@@ -176,5 +176,12 @@ public final class TimeBar extends JavaPlugin {
         } else {
             logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
+    }
+
+    public BukkitAudiences getAdventure() {
+        if(this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
     }
 }

@@ -19,6 +19,7 @@ package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -34,16 +35,21 @@ public class PlayerJoinLeave implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        World world = event.getPlayer().getWorld();
+        Player player = event.getPlayer();
+        World world = player.getWorld();
         if (!timeBar.config.getStringList("worlds-to-show-in").contains(world.getName())) {
-            timeBar.timeTracker.removePlayer(event.getPlayer());
+            timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
+            timeBar.enabledBossBar.remove(player);
         } else {
-            timeBar.timeTracker.addPlayer(event.getPlayer());
+            timeBar.getAdventure().player(player).showBossBar(timeBar.timeTracker);
+            timeBar.enabledBossBar.add(player);
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        timeBar.timeTracker.removePlayer(event.getPlayer());
+        Player player = event.getPlayer();
+        timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
+        timeBar.enabledBossBar.remove(player);
     }
 }

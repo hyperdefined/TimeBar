@@ -19,9 +19,10 @@ package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 public class WorldChange implements Listener {
 
@@ -32,21 +33,26 @@ public class WorldChange implements Listener {
     }
 
     @EventHandler
-    public void onWorldChange(PlayerTeleportEvent event) {
+    public void onWorldChange(PlayerChangedWorldEvent event) {
         // Check the worlds list in the config, if it's empty, then we can ignore this event
         if (timeBar.config.getStringList("worlds-to-show-in").isEmpty()) {
             return;
         }
 
-        World worldTo = event.getTo().getWorld();
+        Player player = event.getPlayer();
+        World newWorld = player.getWorld();
 
         // Check to see if the player is going to a world that the TimeBar is enabled in
         // If the player goes to a world on the list, show them the bar
         // If not, remove it
-        if (timeBar.config.getStringList("worlds-to-show-in").contains(worldTo.getName())) {
-            timeBar.timeTracker.addPlayer(event.getPlayer());
+        if (timeBar.config.getStringList("worlds-to-show-in").contains(newWorld.getName())) {
+            if (timeBar.enabledBossBar.contains(player)) {
+                timeBar.getAdventure().player(player).showBossBar(timeBar.timeTracker);
+            } else {
+                timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
+            }
         } else {
-            timeBar.timeTracker.removePlayer(event.getPlayer());
+            timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
         }
     }
 }
