@@ -19,7 +19,6 @@ package lol.hyper.timebar.commands;
 
 import lol.hyper.timebar.TimeBar;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -50,8 +49,8 @@ public class CommandTimeBar implements TabExecutor {
         switch (args[0]) {
             case "reload": {
                 if (sender.hasPermission("timebar.reload")) {
-                    Bukkit.getScheduler().cancelTask(timeBar.timeBarTask);
                     timeBar.loadConfig();
+                    timeBar.startTimer();
                     timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<green>Configuration reloaded!</green>"));
                 } else {
                     timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<red>You do not have permission for this command.</red>"));

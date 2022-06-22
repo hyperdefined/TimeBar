@@ -1,0 +1,49 @@
+# Use 24hr format for times.
+use-24h-format: false
+
+# Set the text of the TimeBar.
+# {TIME} - The current world time, 7:20 am, etc.
+# {TIME-WORD} - The time to display. Dawn, afternoon, etc.
+# {DAYCOUNT} - How many total days in game have passed.
+# {SEASON} - The current season.
+timebar-title: "{TIME} - {TIME-WORD} (Day {DAYCOUNT}) - {SEASON}"
+
+# Want to change the wording of the times?
+times:
+  dawn: "Dawn"
+  morning: "Morning"
+  noon: "Noon"
+  afternoon: "Afternoon"
+  sunset: "Sunset"
+  night: "Night"
+  midnight: "Midnight"
+
+seasons:
+  spring:
+    dawn: "05:30"
+    morning: "07:30"
+    noon: "12:00"
+    afternoon: "15:00"
+    sunset: "17:30"
+    night: "19:30"
+  summer:
+    dawn: "04:00"
+    morning: "06:00"
+    noon: "12:00"
+    afternoon: "16:00"
+    sunset: "19:00"
+    night: "20:30"
+  fall:
+    dawn: "04:30"
+    morning: "06:30"
+    noon: "12:00"
+    afternoon: "16:30"
+    sunset: "18:30"
+    night: "20:00"
+  winter:
+    dawn: "06:00"
+    morning: "08:00"
+    noon: "12:00"
+    afternoon: "15:00"
+    sunset: "17:00"
+    night: "18:30"

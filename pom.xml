@@ -137,5 +137,12 @@
             <artifactId>adventure-platform-bukkit</artifactId>
             <version>4.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>me.casperge.realisticseasons</groupId>
+            <artifactId>RealisticSeasonsMaven</artifactId>
+            <version>9.0.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/RealisticSeasons-9.0.7.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

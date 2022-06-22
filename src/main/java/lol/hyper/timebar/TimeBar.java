@@ -22,6 +22,9 @@ import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.PlayerJoinLeave;
 import lol.hyper.timebar.events.WorldChange;
+import lol.hyper.timebar.timers.RealisticSeasonsTask;
+import lol.hyper.timebar.timers.RegularTimeBarTask;
+import me.casperge.realisticseasons.api.SeasonsAPI;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -32,6 +35,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,11 +47,12 @@ import java.util.logging.Logger;
 public final class TimeBar extends JavaPlugin {
 
     public final File configFile = new File(this.getDataFolder(), "config.yml");
+    public final File realisticSeasonsConfigFile = new File(this.getDataFolder(), "realisticseasons.yml");
     public final Logger logger = this.getLogger();
     public BossBar timeTracker;
     public FileConfiguration config;
-    public int timeBarTask;
-    public String worldName = "";
+    public FileConfiguration realisticSeasonsConfig;
+    public String worldName;
     public final List<Player> enabledBossBar = new ArrayList<>();
 
     public final MiniMessage miniMessage = MiniMessage.miniMessage();
@@ -56,11 +61,20 @@ public final class TimeBar extends JavaPlugin {
     public PlayerJoinLeave playerJoinLeave;
     public WorldChange worldChange;
     public CommandTimeBar commandReload;
+    public SeasonsAPI seasonsAPI = null;
+    public BukkitTask timeBarTask;
 
     @Override
     public void onEnable() {
         adventure = BukkitAudiences.create(this);
         timeTracker = BossBar.bossBar(Component.text("World Time"), 0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+
+        if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
+            logger.info("RealisticSeasons is detected! Enabling support.");
+            seasonsAPI = SeasonsAPI.getInstance();
+            logger.info(String.valueOf(seasonsAPI));
+        }
+
         loadConfig();
         playerJoinLeave = new PlayerJoinLeave(this);
         worldChange = new WorldChange(this);
@@ -74,42 +88,8 @@ public final class TimeBar extends JavaPlugin {
         new Metrics(this, 90179);
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
-    }
 
-    private void startTimer() {
-        timeBarTask = Bukkit.getScheduler()
-                .scheduleSyncRepeatingTask(
-                        this,
-                        () -> {
-                            double time = Bukkit.getWorld("world").getTime();
-                            timeTracker.progress((float) (time / 24000.0));
-                            Component title = Component.text("World Time");
-                            if (time >= 23000) {
-                                title = parseString(config.getString("times.dawn"));
-                            }
-                            if (time >= 0 && time < 6000) {
-                                title = parseString(config.getString("times.morning"));
-                            }
-                            if (time >= 6000 && time < 9000) {
-                                title = parseString(config.getString("times.noon"));
-                            }
-                            if (time >= 9000 && time < 12000) {
-                                title = parseString(config.getString("times.afternoon"));
-                            }
-                            if (time >= 12000 && time < 14000) {
-                                title = parseString(config.getString("times.sunset"));
-                            }
-                            if (time >= 14000 && time < 18000) {
-                                title = parseString(config.getString("times.night"));
-                            }
-                            if (time >= 18000 && time < 23000) {
-                                title = parseString(config.getString("times.midnight"));
-                            }
-
-                            timeTracker.name(title);
-                        },
-                        0,
-                        20);
+        startTimer();
     }
 
     public void loadConfig() {
@@ -123,6 +103,10 @@ public final class TimeBar extends JavaPlugin {
         }
 
         worldName = config.getString("world-to-track-time");
+        if (worldName == null) {
+            logger.severe("world-to-track-time is not set! Defaulting to world.");
+            worldName = "world";
+        }
 
         if (Bukkit.getWorld(worldName) == null) {
             logger.severe(worldName + " is not a valid world! Using default \"world\" instead.");
@@ -138,21 +122,16 @@ public final class TimeBar extends JavaPlugin {
             timeTracker.color(BossBar.Color.valueOf(color));
         }
 
-        startTimer();
-    }
-
-    private Component parseString(String time) {
-        String title = config.getString("timebar-title");
-
-        if (title.contains("{TIME}")) {
-            title = title.replace("{TIME}", time);
+        if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
+            if (!realisticSeasonsConfigFile.exists()) {
+                this.saveResource("realisticseasons.yml", true);
+            }
+            realisticSeasonsConfig = YamlConfiguration.loadConfiguration(realisticSeasonsConfigFile);
+            int SEASONS_CONFIG_VERSION = 1;
+            if (realisticSeasonsConfig.getInt("config-version") != SEASONS_CONFIG_VERSION) {
+                logger.warning("You seasons configuration is out of date! Some features may not work!");
+            }
         }
-
-        if (title.contains("{DAYCOUNT}")) {
-            title = title.replace(
-                    "{DAYCOUNT}", String.valueOf(Bukkit.getWorld(worldName).getFullTime() / 24000));
-        }
-        return miniMessage.deserialize(title);
     }
 
     public void checkForUpdates() {
@@ -183,5 +162,13 @@ public final class TimeBar extends JavaPlugin {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
+    }
+
+    public void startTimer() {
+        if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
+            timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(this, 0, 20);
+        } else {
+            timeBarTask = new RegularTimeBarTask(this).runTaskTimer(this, 0, 20);
+        }
     }
 }
