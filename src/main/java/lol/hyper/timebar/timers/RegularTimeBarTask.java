@@ -48,19 +48,19 @@ public class RegularTimeBarTask extends BukkitRunnable  {
         if (time >= 23000) {
             title = parseString(timeBar.config.getString("times.dawn"));
         }
-        if (time >= 0 && time < 6000) {
+        if (time >= 1000 && time < 6000) {
             title = parseString(timeBar.config.getString("times.morning"));
         }
-        if (time >= 6000 && time < 9000) {
+        if (time >= 6000 && time < 10500) {
             title = parseString(timeBar.config.getString("times.noon"));
         }
-        if (time >= 9000 && time < 12000) {
+        if (time >= 10500 && time < 12250) {
             title = parseString(timeBar.config.getString("times.afternoon"));
         }
-        if (time >= 12000 && time < 14000) {
+        if (time >= 12250 && time < 13800) {
             title = parseString(timeBar.config.getString("times.sunset"));
         }
-        if (time >= 14000 && time < 18000) {
+        if (time >= 13800 && time < 18000) {
             title = parseString(timeBar.config.getString("times.night"));
         }
         if (time >= 18000 && time < 23000) {
