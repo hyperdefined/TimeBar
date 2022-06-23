@@ -6,9 +6,10 @@ use-24h-format: false
 # {TIME-WORD} - The time to display. Dawn, afternoon, etc.
 # {DAYCOUNT} - How many total days in game have passed.
 # {SEASON} - The current season.
-timebar-title: "{TIME} - {TIME-WORD} (Day {DAYCOUNT}) - {SEASON}"
+# {DATE} - The current date.
+timebar-title: "{TIME} - {TIME-WORD} ({DATE}) - {SEASON}"
 
-# Want to change the wording of the times?
+# Want to change the wording of the time of days?
 times:
   dawn: "Dawn"
   morning: "Morning"
@@ -18,32 +19,91 @@ times:
   night: "Night"
   midnight: "Midnight"
 
-seasons:
-  spring:
-    dawn: "05:30"
-    morning: "07:30"
+# Set each "time of day" for each month.
+# When the time hits one of these, it will turn that "time of day."
+# Example: January at 7:45 AM. It will be dawn.
+month:
+  january:
+    dawn: "06:00"
+    morning: "08:30"
     noon: "12:00"
     afternoon: "15:00"
-    sunset: "17:30"
-    night: "19:30"
-  summer:
-    dawn: "04:00"
-    morning: "06:00"
-    noon: "12:00"
-    afternoon: "16:00"
-    sunset: "19:00"
-    night: "20:30"
-  fall:
-    dawn: "04:30"
-    morning: "06:30"
-    noon: "12:00"
-    afternoon: "16:30"
-    sunset: "18:30"
-    night: "20:00"
-  winter:
-    dawn: "06:00"
+    sunset: "16:30"
+    night: "18:30"
+  february:
+    dawn: "05:25"
     morning: "08:00"
     noon: "12:00"
-    afternoon: "15:00"
+    afternoon: "15:35"
     sunset: "17:00"
-    night: "18:30"
+    night: "18:50"
+  march:
+    dawn: "05:00"
+    morning: "07:30"
+    noon: "12:00"
+    afternoon: "16:00"
+    sunset: "17:45"
+    night: "19:15"
+  april:
+    dawn: "04:30"
+    morning: "07:00"
+    noon: "12:00"
+    afternoon: "16:30"
+    sunset: "18:20"
+    night: "19:45"
+  may:
+    dawn: "04:00"
+    morning: "06:30"
+    noon: "12:00"
+    afternoon: "17:00"
+    sunset: "18:55"
+    night: "20:05"
+  june:
+    dawn: "03:35"
+    morning: "06:00"
+    noon: "12:00"
+    afternoon: "17:30"
+    sunset: "19:30"
+    night: "20:30"
+  july:
+    dawn: "03:10"
+    morning: "05:30"
+    noon: "12:00"
+    afternoon: "18:00"
+    sunset: "20:00"
+    night: "21:00"
+  august:
+    dawn: "03:35"
+    morning: "06:00"
+    noon: "12:00"
+    afternoon: "17:30"
+    sunset: "19:30"
+    night: "20:30"
+  september:
+    dawn: "04:00"
+    morning: "06:30"
+    noon: "12:00"
+    afternoon: "17:00"
+    sunset: "18:55"
+    night: "20:05"
+  october:
+    dawn: "04:30"
+    morning: "07:00"
+    noon: "12:00"
+    afternoon: "16:30"
+    sunset: "18:20"
+    night: "19:45"
+  november:
+    dawn: "05:00"
+    morning: "07:30"
+    noon: "12:00"
+    afternoon: "16:00"
+    sunset: "17:45"
+    night: "19:15"
+  december:
+    dawn: "05:30"
+    morning: "08:00"
+    noon: "12:00"
+    afternoon: "15:35"
+    sunset: "17:00"
+    night: "18:50"

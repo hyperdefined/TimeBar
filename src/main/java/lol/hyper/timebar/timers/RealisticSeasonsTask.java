@@ -18,6 +18,7 @@
 package lol.hyper.timebar.timers;
 
 import lol.hyper.timebar.TimeBar;
+import me.casperge.realisticseasons.calendar.Date;
 import me.casperge.realisticseasons.season.Season;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -46,9 +48,11 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             return;
         }
         Season currentSeason = timeBar.seasonsAPI.getSeason(world);
-
+        Date date = timeBar.seasonsAPI.getDate(world);
+        String month = Month.of(date.getMonth()).toString();
         String hours = String.valueOf(timeBar.seasonsAPI.getHours(world));
         String minutes = String.valueOf(timeBar.seasonsAPI.getMinutes(world));
+        int seconds = timeBar.seasonsAPI.getSeconds(world);
         if (hours.length() == 1) {
             hours = "0" + hours;
         }
@@ -58,30 +62,31 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         String timeString = hours + ":" + minutes;
         LocalTime currentWorldTime = LocalTime.parse(timeString);
 
-        Component title = parseString(world, timeString, getTimeOfDay(currentSeason, currentWorldTime), currentSeason);
+        Component title = parseString(world, timeString, getTimeOfDay(month, currentWorldTime), currentSeason, date);
         timeBar.timeTracker.name(title);
-        timeBar.timeTracker.progress((float) (world.getTime() / 24000.0));
+        int currentSeconds = (Integer.parseInt(hours) * 3600) + (Integer.parseInt(minutes) * 60) + seconds;
+        timeBar.timeTracker.progress((float) (currentSeconds / 86400.0));
     }
 
     /**
      * Gets the "time of day" based on time.
      *
-     * @param season           The current world season.
+     * @param month            The current month.
      * @param currentWorldTime The current time.
      * @return The time of day.
      */
-    private String getTimeOfDay(Season season, LocalTime currentWorldTime) {
-        String lowercase = season.toString().toLowerCase(Locale.ROOT);
-        ConfigurationSection seasonSection = timeBar.realisticSeasonsConfig.getConfigurationSection("seasons." + lowercase);
+    private String getTimeOfDay(String month, LocalTime currentWorldTime) {
+        String monthLowerCase = month.toLowerCase(Locale.ROOT);
+        ConfigurationSection seasonSection = timeBar.realisticSeasonsConfig.getConfigurationSection("month." + monthLowerCase);
         if (seasonSection == null) {
-            timeBar.logger.severe("Section " + "season." + lowercase + " does NOT EXIST!");
+            timeBar.logger.severe("Section " + "month." + monthLowerCase + " does NOT EXIST!");
             return "INVALID";
         }
 
         //dawn
         String dawn = seasonSection.getString("dawn");
         if (dawn == null) {
-            timeBar.logger.severe("seasons." + lowercase + ".dawn is NOT SET!");
+            timeBar.logger.severe("month." + monthLowerCase + ".dawn is NOT SET!");
             return "INVALID";
         }
         LocalTime dawnTime = LocalTime.parse(dawn);
@@ -89,7 +94,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //morning
         String morning = seasonSection.getString("morning");
         if (morning == null) {
-            timeBar.logger.severe("seasons." + lowercase + ".morning is NOT SET!");
+            timeBar.logger.severe("month." + monthLowerCase + ".morning is NOT SET!");
             return "INVALID";
         }
         LocalTime morningTime = LocalTime.parse(morning);
@@ -97,7 +102,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //noon
         String noon = seasonSection.getString("noon");
         if (noon == null) {
-            timeBar.logger.severe("seasons." + lowercase + ".noon is NOT SET!");
+            timeBar.logger.severe("month." + monthLowerCase + ".noon is NOT SET!");
             return "INVALID";
         }
         LocalTime noonTime = LocalTime.parse(noon);
@@ -105,7 +110,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //afternoon
         String afternoon = seasonSection.getString("afternoon");
         if (afternoon == null) {
-            timeBar.logger.severe("seasons." + lowercase + ".afternoon is NOT SET!");
+            timeBar.logger.severe("month." + monthLowerCase + ".afternoon is NOT SET!");
             return "INVALID";
         }
         LocalTime afternoonTime = LocalTime.parse(afternoon);
@@ -113,7 +118,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //sunset
         String sunset = seasonSection.getString("sunset");
         if (sunset == null) {
-            timeBar.logger.severe("seasons." + lowercase + ".sunset is NOT SET!");
+            timeBar.logger.severe("month." + monthLowerCase + ".sunset is NOT SET!");
             return "INVALID";
         }
         LocalTime sunsetTime = LocalTime.parse(sunset);
@@ -121,7 +126,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //night
         String night = seasonSection.getString("night");
         if (night == null) {
-            timeBar.logger.severe("seasons." + lowercase + ".night is NOT SET!");
+            timeBar.logger.severe("month." + monthLowerCase + ".night is NOT SET!");
             return "INVALID";
         }
         LocalTime nightTime = LocalTime.parse(night);
@@ -167,7 +172,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
      * @param season    The current season.
      * @return Formatted title.
      */
-    private Component parseString(World world, String time, String timeOfDay, Season season) {
+    private Component parseString(World world, String time, String timeOfDay, Season season, Date date) {
         String title = timeBar.realisticSeasonsConfig.getString("timebar-title");
         if (title == null) {
             timeBar.logger.severe("timebar-title is not set! Using default.");
@@ -194,6 +199,10 @@ public class RealisticSeasonsTask extends BukkitRunnable {
 
         if (title.contains("{SEASON}")) {
             title = title.replace("{SEASON}", season.toString());
+        }
+
+        if (title.contains("{DATE}")) {
+            title = title.replace("{DATE}", date.toString(false));
         }
         return timeBar.miniMessage.deserialize(title);
     }
