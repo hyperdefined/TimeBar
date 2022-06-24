@@ -179,7 +179,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             title = "{TIME} - {TIME-WORD} ({DATE}) - {SEASON}";
         }
         String worldTime;
-        if (timeBar.realisticSeasonsConfig.getBoolean("use-24h-format")) {
+        if (!timeBar.realisticSeasonsConfig.getBoolean("use-24h-format")) {
             worldTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm")).format(DateTimeFormatter.ofPattern("hh:mm a"));
         } else {
             worldTime = time;
