@@ -202,7 +202,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         }
 
         if (title.contains("{DATE}")) {
-            title = title.replace("{DATE}", date.toString(false));
+            title = title.replace("{DATE}", date.toString(true));
         }
         return timeBar.miniMessage.deserialize(title);
     }
