@@ -24,6 +24,17 @@ times:
   night: "Night"
   midnight: "Midnight"
 
+# Set when each time of day is shown.
+# This is in game ticks. You can see by using "/time query daytime"
+# When the ticks hit one of these, it will be that time of day.
+times-of-day:
+  dawn: 23000
+  morning: 1000
+  noon: 6000
+  afternoon: 10500
+  sunset: 12250
+  night: 13800
+  midnight: 18000
 
 # No touch please :)
 config-version: 3

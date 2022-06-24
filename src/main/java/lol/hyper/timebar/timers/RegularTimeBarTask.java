@@ -23,7 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class RegularTimeBarTask extends BukkitRunnable  {
+public class RegularTimeBarTask extends BukkitRunnable {
 
     private final TimeBar timeBar;
     private final World world;
@@ -45,31 +45,37 @@ public class RegularTimeBarTask extends BukkitRunnable  {
         timeBar.timeTracker.progress((float) (time / 24000.0));
         Component title = Component.text("World Time");
 
-        if (time >= 23000) {
+        if (time >= getTime("dawn")) {
             title = parseString(timeBar.config.getString("times.dawn"));
         }
-        if (time >= 1000 && time < 6000) {
+        if (time >= getTime("morning") && time < getTime("noon")) {
             title = parseString(timeBar.config.getString("times.morning"));
         }
-        if (time >= 6000 && time < 10500) {
+        if (time >= getTime("noon") && time < getTime("afternoon")) {
             title = parseString(timeBar.config.getString("times.noon"));
         }
-        if (time >= 10500 && time < 12250) {
+        if (time >= getTime("afternoon") && time < getTime("sunset")) {
             title = parseString(timeBar.config.getString("times.afternoon"));
         }
-        if (time >= 12250 && time < 13800) {
+        if (time >= getTime("sunset") && time < getTime("night")) {
             title = parseString(timeBar.config.getString("times.sunset"));
         }
-        if (time >= 13800 && time < 18000) {
+        if (time >= getTime("night") && time < getTime("midnight")) {
             title = parseString(timeBar.config.getString("times.night"));
         }
-        if (time >= 18000 && time < 23000) {
+        if (time >= getTime("midnight") && time < getTime("dawn")) {
             title = parseString(timeBar.config.getString("times.midnight"));
         }
 
         timeBar.timeTracker.name(title);
     }
 
+    /**
+     * Parses the title, which formats any placeholders.
+     *
+     * @param time The current time string.
+     * @return Formatted title.
+     */
     private Component parseString(String time) {
         String title = timeBar.config.getString("timebar-title");
         if (title == null) {
@@ -82,8 +88,17 @@ public class RegularTimeBarTask extends BukkitRunnable  {
         }
 
         if (title.contains("{DAYCOUNT}")) {
-            title = title.replace("{DAYCOUNT}", String.valueOf(Bukkit.getWorld(timeBar.worldName).getFullTime() / 24000));
+            title = title.replace("{DAYCOUNT}", String.valueOf(world.getFullTime() / 24000));
         }
         return timeBar.miniMessage.deserialize(title);
+    }
+
+    /**
+     * Get config's time of day value.
+     * @param timeOfDay Time of day.
+     * @return The time of day start tick.
+     */
+    private int getTime(String timeOfDay) {
+        return timeBar.config.getInt("times-of-day." + timeOfDay);
     }
 }
