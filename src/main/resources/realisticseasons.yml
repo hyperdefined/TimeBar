@@ -30,6 +30,7 @@ month:
     afternoon: "15:00"
     sunset: "16:30"
     night: "18:30"
+    midnight: "00:00"
   february:
     dawn: "05:25"
     morning: "08:00"
@@ -37,6 +38,7 @@ month:
     afternoon: "15:35"
     sunset: "17:00"
     night: "18:50"
+    midnight: "00:00"
   march:
     dawn: "05:00"
     morning: "07:30"
@@ -44,6 +46,7 @@ month:
     afternoon: "16:00"
     sunset: "17:45"
     night: "19:15"
+    midnight: "00:00"
   april:
     dawn: "04:30"
     morning: "07:00"
@@ -51,6 +54,7 @@ month:
     afternoon: "16:30"
     sunset: "18:20"
     night: "19:45"
+    midnight: "00:00"
   may:
     dawn: "04:00"
     morning: "06:30"
@@ -58,6 +62,7 @@ month:
     afternoon: "17:00"
     sunset: "18:55"
     night: "20:05"
+    midnight: "00:00"
   june:
     dawn: "03:35"
     morning: "06:00"
@@ -65,6 +70,7 @@ month:
     afternoon: "17:30"
     sunset: "19:30"
     night: "20:30"
+    midnight: "00:00"
   july:
     dawn: "03:10"
     morning: "05:30"
@@ -72,6 +78,7 @@ month:
     afternoon: "18:00"
     sunset: "20:00"
     night: "21:00"
+    midnight: "00:00"
   august:
     dawn: "03:35"
     morning: "06:00"
@@ -79,6 +86,7 @@ month:
     afternoon: "17:30"
     sunset: "19:30"
     night: "20:30"
+    midnight: "00:00"
   september:
     dawn: "04:00"
     morning: "06:30"
@@ -86,6 +94,7 @@ month:
     afternoon: "17:00"
     sunset: "18:55"
     night: "20:05"
+    midnight: "00:00"
   october:
     dawn: "04:30"
     morning: "07:00"
@@ -93,6 +102,7 @@ month:
     afternoon: "16:30"
     sunset: "18:20"
     night: "19:45"
+    midnight: "00:00"
   november:
     dawn: "05:00"
     morning: "07:30"
@@ -100,6 +110,7 @@ month:
     afternoon: "16:00"
     sunset: "17:45"
     night: "19:15"
+    midnight: "00:00"
   december:
     dawn: "05:30"
     morning: "08:00"
@@ -107,6 +118,7 @@ month:
     afternoon: "15:35"
     sunset: "17:00"
     night: "18:50"
+    midnight: "00:00"
 
 # No touch please :)
 config-version: 1

@@ -77,14 +77,14 @@ public class RealisticSeasonsTask extends BukkitRunnable {
      */
     private String getTimeOfDay(String month, LocalTime currentWorldTime) {
         String monthLowerCase = month.toLowerCase(Locale.ROOT);
-        ConfigurationSection seasonSection = timeBar.realisticSeasonsConfig.getConfigurationSection("month." + monthLowerCase);
-        if (seasonSection == null) {
+        ConfigurationSection monthSection = timeBar.realisticSeasonsConfig.getConfigurationSection("month." + monthLowerCase);
+        if (monthSection == null) {
             timeBar.logger.severe("Section " + "month." + monthLowerCase + " does NOT EXIST!");
             return "INVALID";
         }
 
         //dawn
-        String dawn = seasonSection.getString("dawn");
+        String dawn = monthSection.getString("dawn");
         if (dawn == null) {
             timeBar.logger.severe("month." + monthLowerCase + ".dawn is NOT SET!");
             return "INVALID";
@@ -92,7 +92,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         LocalTime dawnTime = LocalTime.parse(dawn);
 
         //morning
-        String morning = seasonSection.getString("morning");
+        String morning = monthSection.getString("morning");
         if (morning == null) {
             timeBar.logger.severe("month." + monthLowerCase + ".morning is NOT SET!");
             return "INVALID";
@@ -100,7 +100,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         LocalTime morningTime = LocalTime.parse(morning);
 
         //noon
-        String noon = seasonSection.getString("noon");
+        String noon = monthSection.getString("noon");
         if (noon == null) {
             timeBar.logger.severe("month." + monthLowerCase + ".noon is NOT SET!");
             return "INVALID";
@@ -108,7 +108,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         LocalTime noonTime = LocalTime.parse(noon);
 
         //afternoon
-        String afternoon = seasonSection.getString("afternoon");
+        String afternoon = monthSection.getString("afternoon");
         if (afternoon == null) {
             timeBar.logger.severe("month." + monthLowerCase + ".afternoon is NOT SET!");
             return "INVALID";
@@ -116,7 +116,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         LocalTime afternoonTime = LocalTime.parse(afternoon);
 
         //sunset
-        String sunset = seasonSection.getString("sunset");
+        String sunset = monthSection.getString("sunset");
         if (sunset == null) {
             timeBar.logger.severe("month." + monthLowerCase + ".sunset is NOT SET!");
             return "INVALID";
@@ -124,16 +124,24 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         LocalTime sunsetTime = LocalTime.parse(sunset);
 
         //night
-        String night = seasonSection.getString("night");
+        String night = monthSection.getString("night");
         if (night == null) {
             timeBar.logger.severe("month." + monthLowerCase + ".night is NOT SET!");
             return "INVALID";
         }
         LocalTime nightTime = LocalTime.parse(night);
 
-        // night before dawn
-        if (currentWorldTime.isBefore(dawnTime)) {
-            return timeBar.realisticSeasonsConfig.getString("times.night");
+        //midnight
+        String midnight = monthSection.getString("midnight");
+        if (midnight == null) {
+            timeBar.logger.severe("month." + monthLowerCase + ".midnight is NOT SET!");
+            return "INVALID";
+        }
+        LocalTime midnightTime = LocalTime.parse(midnight);
+
+        // time is midnight
+        if ((currentWorldTime.isAfter(midnightTime) || currentWorldTime.equals(midnightTime)) && currentWorldTime.isBefore(dawnTime)) {
+            return timeBar.realisticSeasonsConfig.getString("times.midnight");
         }
         // time is dawn
         if ((currentWorldTime.isAfter(dawnTime) || currentWorldTime.equals(dawnTime)) && currentWorldTime.isBefore(morningTime)) {
@@ -156,9 +164,10 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             return timeBar.realisticSeasonsConfig.getString("times.sunset");
         }
         // time is night
-        if (currentWorldTime.isAfter(nightTime) || currentWorldTime.equals(nightTime)) {
+        if ((currentWorldTime.isAfter(nightTime) || currentWorldTime.equals(nightTime))) {
             return timeBar.realisticSeasonsConfig.getString("times.night");
         }
+
         timeBar.logger.severe("Unable to find suitable time for " + currentWorldTime);
         return "INVALID";
     }
