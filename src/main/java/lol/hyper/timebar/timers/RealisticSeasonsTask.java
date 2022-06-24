@@ -176,7 +176,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         String title = timeBar.realisticSeasonsConfig.getString("timebar-title");
         if (title == null) {
             timeBar.logger.severe("timebar-title is not set! Using default.");
-            title = "{TIME} - {TIME-WORD} (Day {DAYCOUNT}) - {SEASON}";
+            title = "{TIME} - {TIME-WORD} ({DATE}) - {SEASON}";
         }
         String worldTime;
         if (timeBar.realisticSeasonsConfig.getBoolean("use-24h-format")) {
