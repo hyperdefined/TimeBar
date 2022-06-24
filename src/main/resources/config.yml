@@ -14,6 +14,10 @@ titlebar-color: "blue"
 # {DAYCOUNT} - How many total days in game have passed.
 timebar-title: "{TIME} (Day {DAYCOUNT})"
 
+# How often should the title and progress update?
+# This is in game ticks, 20 ticks = 1 second.
+bar-update-frequency: 20
+
 # Want to change the wording of the times?
 times:
   dawn: "Dawn"

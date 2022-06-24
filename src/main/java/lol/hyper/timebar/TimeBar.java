@@ -97,7 +97,7 @@ public final class TimeBar extends JavaPlugin {
             this.saveResource("config.yml", true);
         }
         config = YamlConfiguration.loadConfiguration(configFile);
-        int CONFIG_VERSION = 2;
+        int CONFIG_VERSION = 3;
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("You configuration is out of date! Some features may not work!");
         }
@@ -166,9 +166,9 @@ public final class TimeBar extends JavaPlugin {
 
     public void startTimer() {
         if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
-            timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(this, 0, 20);
+            timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(this, 0, config.getInt("bar-update-frequency"));
         } else {
-            timeBarTask = new RegularTimeBarTask(this).runTaskTimer(this, 0, 20);
+            timeBarTask = new RegularTimeBarTask(this).runTaskTimer(this, 0, config.getInt("bar-update-frequency"));
         }
     }
 }
