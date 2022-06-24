@@ -72,7 +72,6 @@ public final class TimeBar extends JavaPlugin {
         if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
             logger.info("RealisticSeasons is detected! Enabling support.");
             seasonsAPI = SeasonsAPI.getInstance();
-            logger.info(String.valueOf(seasonsAPI));
         }
 
         loadConfig();
