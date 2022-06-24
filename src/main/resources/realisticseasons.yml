@@ -107,3 +107,6 @@ month:
     afternoon: "15:35"
     sunset: "17:00"
     night: "18:50"
+
+# No touch please :)
+config-version: 1
