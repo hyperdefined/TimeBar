@@ -10,7 +10,7 @@
 	<a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
 </p>
 
-TimeBar let's you visualize the current world time as a bossbar. See the time of day whenever!
+TimeBar lets you visualize the current world time as a bossbar. See the time of day whenever!
 
 ![Image](https://raw.githubusercontent.com/hyperdefined/TimeBar/master/example.gif)
 
@@ -20,6 +20,7 @@ TimeBar let's you visualize the current world time as a bossbar. See the time of
   * Change the text that is shown on it.  
 * Show TimeBar in certain worlds.
 * Disable TimeBar with a command if you don't want to see it.
+* Support for [RealisticSeasons](https://www.spigotmc.org/resources/93275/).
 
 ## Documentation
 Visit the [wiki](https://github.com/hyperdefined/TimeBar/wiki) for help.

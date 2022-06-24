@@ -18,7 +18,9 @@
 package lol.hyper.timebar.commands;
 
 import lol.hyper.timebar.TimeBar;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -32,17 +34,17 @@ import java.util.List;
 public class CommandTimeBar implements TabExecutor {
 
     private final TimeBar timeBar;
-    private final MiniMessage miniMessage;
+    private final BukkitAudiences audiences;
 
     public CommandTimeBar(TimeBar timeBar) {
         this.timeBar = timeBar;
-        this.miniMessage = timeBar.miniMessage;
+        this.audiences = timeBar.getAdventure();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
-            timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<green>TimeBar version" + timeBar.getDescription().getVersion() + ". Created by hyperdefined.</green>"));
+            audiences.sender(sender).sendMessage(Component.text("TimeBar version " + timeBar.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
             return true;
         }
 
@@ -51,36 +53,36 @@ public class CommandTimeBar implements TabExecutor {
                 if (sender.hasPermission("timebar.reload")) {
                     timeBar.loadConfig();
                     timeBar.startTimer();
-                    timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<green>Configuration reloaded!</green>"));
+                    audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!").color(NamedTextColor.GREEN));
                 } else {
-                    timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<red>You do not have permission for this command.</red>"));
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
                 }
                 return true;
             }
             case "on": {
                 if (sender instanceof ConsoleCommandSender) {
-                    timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<red>You must be a player for this command.</red>"));
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
                 Player player = (Player) sender;
-                timeBar.getAdventure().player(player).showBossBar(timeBar.timeTracker);
-                timeBar.getAdventure().player(player).sendMessage(miniMessage.deserialize("<green>TimeBar is now enabled.</green>"));
+                audiences.player(player).showBossBar(timeBar.timeTracker);
+                audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
                 timeBar.enabledBossBar.add(player);
                 return true;
             }
             case "off": {
                 if (sender instanceof ConsoleCommandSender) {
-                    timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<red>You must be a player for this command.</red>"));
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
                 Player player = (Player) sender;
-                timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
-                timeBar.getAdventure().player(player).sendMessage(miniMessage.deserialize("<green>TimeBar is now disabled.</green>"));
+                audiences.player(player).hideBossBar(timeBar.timeTracker);
+                audiences.player(player).sendMessage(Component.text("TimeBar is now disabled.").color(NamedTextColor.GREEN));
                 timeBar.enabledBossBar.remove(player);
                 return true;
             }
             default: {
-                timeBar.getAdventure().sender(sender).sendMessage(miniMessage.deserialize("<red>Invalid sub-command. Valid options are: reload, on, off.</red>"));
+                audiences.sender(sender).sendMessage(Component.text("Invalid sub-command. Valid options are: reload, on, off.").color(NamedTextColor.RED));
             }
         }
         return true;

@@ -18,6 +18,7 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,9 +29,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerJoinLeave implements Listener {
 
     private final TimeBar timeBar;
+    private final BukkitAudiences audiences;
 
     public PlayerJoinLeave(TimeBar timeBar) {
         this.timeBar = timeBar;
+        this.audiences = timeBar.getAdventure();
     }
 
     @EventHandler
@@ -38,10 +41,10 @@ public class PlayerJoinLeave implements Listener {
         Player player = event.getPlayer();
         World world = player.getWorld();
         if (!timeBar.config.getStringList("worlds-to-show-in").contains(world.getName())) {
-            timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
+            audiences.player(player).hideBossBar(timeBar.timeTracker);
             timeBar.enabledBossBar.remove(player);
         } else {
-            timeBar.getAdventure().player(player).showBossBar(timeBar.timeTracker);
+            audiences.player(player).showBossBar(timeBar.timeTracker);
             timeBar.enabledBossBar.add(player);
         }
     }
@@ -49,7 +52,7 @@ public class PlayerJoinLeave implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
+        audiences.player(player).hideBossBar(timeBar.timeTracker);
         timeBar.enabledBossBar.remove(player);
     }
 }

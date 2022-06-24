@@ -18,6 +18,7 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,9 +28,11 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 public class WorldChange implements Listener {
 
     private final TimeBar timeBar;
+    private final BukkitAudiences audiences;
 
     public WorldChange(TimeBar timeBar) {
         this.timeBar = timeBar;
+        this.audiences = timeBar.getAdventure();
     }
 
     @EventHandler
@@ -47,12 +50,12 @@ public class WorldChange implements Listener {
         // If not, remove it
         if (timeBar.config.getStringList("worlds-to-show-in").contains(newWorld.getName())) {
             if (timeBar.enabledBossBar.contains(player)) {
-                timeBar.getAdventure().player(player).showBossBar(timeBar.timeTracker);
+                audiences.player(player).showBossBar(timeBar.timeTracker);
             } else {
-                timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
+                audiences.player(player).hideBossBar(timeBar.timeTracker);
             }
         } else {
-            timeBar.getAdventure().player(player).hideBossBar(timeBar.timeTracker);
+            audiences.player(player).hideBossBar(timeBar.timeTracker);
         }
     }
 }
