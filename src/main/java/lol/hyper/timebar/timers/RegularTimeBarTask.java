@@ -40,12 +40,11 @@ public class RegularTimeBarTask extends BukkitRunnable {
             this.cancel();
             return;
         }
-
-        double time = world.getTime();
+        int time = (int) world.getTime();
         timeBar.timeTracker.progress((float) (time / 24000.0));
         Component title = Component.text("World Time");
 
-        if (time >= getTime("dawn")) {
+        if (time >= getTime("dawn") || time < getTime("morning")) {
             title = parseString(timeBar.config.getString("times.dawn"));
         }
         if (time >= getTime("morning") && time < getTime("noon")) {
