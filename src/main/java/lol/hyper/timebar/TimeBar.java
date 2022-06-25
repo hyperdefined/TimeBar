@@ -84,7 +84,7 @@ public final class TimeBar extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerJoinLeave, this);
         Bukkit.getServer().getPluginManager().registerEvents(worldChange, this);
 
-        new Metrics(this, 90179);
+        new Metrics(this, 10674);
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
 
