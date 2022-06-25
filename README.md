@@ -13,6 +13,7 @@
 TimeBar lets you visualize the current world time as a bossbar. See the time of day whenever!
 
 ![Image](https://raw.githubusercontent.com/hyperdefined/TimeBar/master/example.gif)
+![Image](https://raw.githubusercontent.com/hyperdefined/TimeBar/master/rs-example.png)
 
 ## Features
 * Completely customized how the TimeBar looks.
