@@ -133,10 +133,9 @@
         </dependency>
         <dependency>
             <groupId>me.casperge.realisticseasons</groupId>
-            <artifactId>RealisticSeasonsMaven</artifactId>
-            <version>9.0.7</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/RealisticSeasons-9.0.7.jar</systemPath>
+            <artifactId>RealisticSeasons</artifactId>
+            <version>9.1.10</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
