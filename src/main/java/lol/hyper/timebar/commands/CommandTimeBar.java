@@ -48,6 +48,11 @@ public class CommandTimeBar implements TabExecutor {
             return true;
         }
 
+        if (!sender.hasPermission("timebar.command")) {
+            audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+            return true;
+        }
+
         switch (args[0]) {
             case "reload": {
                 if (sender.hasPermission("timebar.reload")) {
@@ -64,6 +69,10 @@ public class CommandTimeBar implements TabExecutor {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
+                if (!sender.hasPermission("timebar.enable")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                    return true;
+                }
                 Player player = (Player) sender;
                 audiences.player(player).showBossBar(timeBar.timeTracker);
                 audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
@@ -73,6 +82,10 @@ public class CommandTimeBar implements TabExecutor {
             case "off": {
                 if (sender instanceof ConsoleCommandSender) {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
+                    return true;
+                }
+                if (!sender.hasPermission("timebar.disable")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
                     return true;
                 }
                 Player player = (Player) sender;

@@ -11,4 +11,17 @@ commands:
   timebar:
     aliases: [tb]
     usage: /timebar
-    description: Main command.
+    permission: timebar.command
+permissions:
+  timebar.commmand:
+    default: true
+    description: Allows the usage of /timebar.
+  timebar.reload:
+    default: op
+    description: Allows the usage of /timebar reload.
+  timebar.enable:
+    default: true
+    description: Allows the usage of /timebar on.
+  timebar.disable:
+    default: true
+    description: Allows the usage of /timebar off.
