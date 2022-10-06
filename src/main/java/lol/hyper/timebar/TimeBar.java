@@ -24,7 +24,6 @@ import lol.hyper.timebar.events.PlayerJoinLeave;
 import lol.hyper.timebar.events.WorldChange;
 import lol.hyper.timebar.timers.RealisticSeasonsTask;
 import lol.hyper.timebar.timers.RegularTimeBarTask;
-import me.casperge.realisticseasons.api.SeasonsAPI;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -61,18 +60,12 @@ public final class TimeBar extends JavaPlugin {
     public PlayerJoinLeave playerJoinLeave;
     public WorldChange worldChange;
     public CommandTimeBar commandReload;
-    public SeasonsAPI seasonsAPI = null;
     public BukkitTask timeBarTask;
 
     @Override
     public void onEnable() {
         adventure = BukkitAudiences.create(this);
         timeTracker = BossBar.bossBar(Component.text("World Time"), 0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
-
-        if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
-            logger.info("RealisticSeasons is detected! Enabling support.");
-            seasonsAPI = SeasonsAPI.getInstance();
-        }
 
         loadConfig();
         playerJoinLeave = new PlayerJoinLeave(this);
@@ -122,6 +115,7 @@ public final class TimeBar extends JavaPlugin {
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
+        	logger.info("RealisticSeasons is detected! Enabling support.");
             if (!realisticSeasonsConfigFile.exists()) {
                 this.saveResource("realisticseasons.yml", true);
             }

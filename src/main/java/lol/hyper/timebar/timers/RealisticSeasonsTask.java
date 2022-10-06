@@ -18,6 +18,7 @@
 package lol.hyper.timebar.timers;
 
 import lol.hyper.timebar.TimeBar;
+import me.casperge.realisticseasons.api.SeasonsAPI;
 import me.casperge.realisticseasons.calendar.Date;
 import me.casperge.realisticseasons.season.Season;
 import net.kyori.adventure.text.Component;
@@ -34,9 +35,11 @@ import java.util.Locale;
 public class RealisticSeasonsTask extends BukkitRunnable {
 
     private final TimeBar timeBar;
+    private final SeasonsAPI seasonsAPI;
 
     public RealisticSeasonsTask(TimeBar timeBar) {
         this.timeBar = timeBar;
+        this.seasonsAPI = SeasonsAPI.getInstance();
     }
 
     @Override
@@ -47,12 +50,17 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             this.cancel();
             return;
         }
-        Season currentSeason = timeBar.seasonsAPI.getSeason(world);
-        Date date = timeBar.seasonsAPI.getDate(world);
+        Season currentSeason = this.seasonsAPI.getSeason(world);
+        Date date = this.seasonsAPI.getDate(world);
+        if(date == null) {
+        	this.timeBar.logger.severe("Cannot Retrieve date from RealisticSeasons!");
+            this.cancel();
+            return;
+        }
         String month = Month.of(date.getMonth()).toString();
-        String hours = String.valueOf(timeBar.seasonsAPI.getHours(world));
-        String minutes = String.valueOf(timeBar.seasonsAPI.getMinutes(world));
-        int seconds = timeBar.seasonsAPI.getSeconds(world);
+        String hours = String.valueOf(this.seasonsAPI.getHours(world));
+        String minutes = String.valueOf(this.seasonsAPI.getMinutes(world));
+        int seconds = this.seasonsAPI.getSeconds(world);
         if (hours.length() == 1) {
             hours = "0" + hours;
         }
