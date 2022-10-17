@@ -106,7 +106,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.19.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -134,7 +134,7 @@
         <dependency>
             <groupId>me.casperge.realisticseasons</groupId>
             <artifactId>RealisticSeasons</artifactId>
-            <version>9.1.10</version>
+            <version>10.1.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
