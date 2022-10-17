@@ -40,10 +40,13 @@ public class PlayerJoinLeave implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
+        // if the player joins the server in a world that the bossbar
+        // is not enabled in, don't show it
         if (!timeBar.config.getStringList("worlds-to-show-in").contains(world.getName())) {
             audiences.player(player).hideBossBar(timeBar.timeTracker);
             timeBar.enabledBossBar.remove(player);
         } else {
+            // show the bossbar if the player joins in a world we display it
             audiences.player(player).showBossBar(timeBar.timeTracker);
             timeBar.enabledBossBar.add(player);
         }

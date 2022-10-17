@@ -40,28 +40,37 @@ public class RegularTimeBarTask extends BukkitRunnable {
             this.cancel();
             return;
         }
+        // get the current time
         int time = (int) world.getTime();
         timeBar.timeTracker.progress((float) (time / 24000.0));
         Component title = Component.text("World Time");
 
+        // set the time of day depending on the time
+        // dawn
         if (time >= getTime("dawn") || time < getTime("morning")) {
             title = parseString(timeBar.config.getString("times.dawn"));
         }
+        // morning
         if (time >= getTime("morning") && time < getTime("noon")) {
             title = parseString(timeBar.config.getString("times.morning"));
         }
+        // noon
         if (time >= getTime("noon") && time < getTime("afternoon")) {
             title = parseString(timeBar.config.getString("times.noon"));
         }
+        // afternoon
         if (time >= getTime("afternoon") && time < getTime("sunset")) {
             title = parseString(timeBar.config.getString("times.afternoon"));
         }
+        // sunset
         if (time >= getTime("sunset") && time < getTime("night")) {
             title = parseString(timeBar.config.getString("times.sunset"));
         }
+        // night
         if (time >= getTime("night") && time < getTime("midnight")) {
             title = parseString(timeBar.config.getString("times.night"));
         }
+        // midnight
         if (time >= getTime("midnight") && time < getTime("dawn")) {
             title = parseString(timeBar.config.getString("times.midnight"));
         }
@@ -94,6 +103,7 @@ public class RegularTimeBarTask extends BukkitRunnable {
 
     /**
      * Get config's time of day value.
+     *
      * @param timeOfDay Time of day.
      * @return The time of day start tick.
      */

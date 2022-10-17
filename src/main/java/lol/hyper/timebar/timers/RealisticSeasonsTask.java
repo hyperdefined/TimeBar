@@ -36,42 +36,53 @@ public class RealisticSeasonsTask extends BukkitRunnable {
 
     private final TimeBar timeBar;
     private final SeasonsAPI seasonsAPI;
+    private final World world;
 
     public RealisticSeasonsTask(TimeBar timeBar) {
         this.timeBar = timeBar;
         this.seasonsAPI = SeasonsAPI.getInstance();
+        world = Bukkit.getWorld(timeBar.worldName);
     }
 
     @Override
     public void run() {
-        World world = Bukkit.getWorld(timeBar.worldName);
         if (world == null) {
             this.timeBar.logger.severe(timeBar.worldName + " is not a valid world!");
             this.cancel();
             return;
         }
+        // get the current season & date of the world
         Season currentSeason = this.seasonsAPI.getSeason(world);
-        Date date = this.seasonsAPI.getDate(world);
-        if(date == null) {
-        	this.timeBar.logger.severe("Cannot Retrieve date from RealisticSeasons!");
+        Date currentDate = this.seasonsAPI.getDate(world);
+        // this should be null if RealisticSeasons hasn't bet setup yet
+        if (currentDate == null) {
+            this.timeBar.logger.severe("Cannot retrieve date from RealisticSeasons!");
             this.cancel();
             return;
         }
-        String month = Month.of(date.getMonth()).toString();
+        // get the current time
+        String month = Month.of(currentDate.getMonth()).toString();
         String hours = String.valueOf(this.seasonsAPI.getHours(world));
         String minutes = String.valueOf(this.seasonsAPI.getMinutes(world));
         int seconds = this.seasonsAPI.getSeconds(world);
+
+        // the RealisticSeasons API doesn't return single digit numbers
+        // with zeros at the start, so we must correct it
+        // Example: it returns 4, not 04
         if (hours.length() == 1) {
             hours = "0" + hours;
         }
         if (minutes.length() == 1) {
             minutes = "0" + minutes;
         }
+        // format the time correctly
         String timeString = hours + ":" + minutes;
         LocalTime currentWorldTime = LocalTime.parse(timeString);
 
-        Component title = parseString(world, timeString, getTimeOfDay(month, currentWorldTime), currentSeason, date);
+        // get the title to display for the bossbar
+        Component title = parseString(world, timeString, getTimeOfDay(month, currentWorldTime), currentSeason, currentDate);
         timeBar.timeTracker.name(title);
+        // set the progress
         int currentSeconds = (Integer.parseInt(hours) * 3600) + (Integer.parseInt(minutes) * 60) + seconds;
         timeBar.timeTracker.progress((float) (currentSeconds / 86400.0));
     }
