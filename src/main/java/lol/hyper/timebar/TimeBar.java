@@ -158,10 +158,16 @@ public final class TimeBar extends JavaPlugin {
     }
 
     public void startTimer() {
+        if (timeBarTask != null) {
+                timeBarTask.cancel();
+                logger.info("Stopping current TimeBar task...");
+        }
         if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
             timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(this, 0, config.getInt("bar-update-frequency"));
+            logger.info("Starting new TimeBar task with RealisticSeasons support...");
         } else {
             timeBarTask = new RegularTimeBarTask(this).runTaskTimer(this, 0, config.getInt("bar-update-frequency"));
+            logger.info("Starting new TimeBar task...");
         }
     }
 }
