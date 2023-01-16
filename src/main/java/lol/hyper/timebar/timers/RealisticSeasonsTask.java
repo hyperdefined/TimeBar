@@ -27,6 +27,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -38,10 +40,30 @@ public class RealisticSeasonsTask extends BukkitRunnable {
     private final SeasonsAPI seasonsAPI;
     private final World world;
 
+    private SimpleDateFormat DATE_FORMAT;
+    private final SimpleDateFormat convertDate = new SimpleDateFormat("M/d/yyyy");
+
     public RealisticSeasonsTask(TimeBar timeBar) {
         this.timeBar = timeBar;
         this.seasonsAPI = SeasonsAPI.getInstance();
         world = Bukkit.getWorld(timeBar.worldName);
+        String dateFormat = timeBar.realisticSeasonsConfig.getString("date-format");
+
+
+        // if these config values are missing, use the default ones
+        if (dateFormat == null) {
+            dateFormat = "M/dd/yyyy";
+            timeBar.logger.warning("date-format is missing! Using default American English format.");
+        }
+
+        // test the date format
+        try {
+            DATE_FORMAT = new SimpleDateFormat(dateFormat, Locale.getDefault());
+        } catch (NullPointerException | IllegalArgumentException exception) {
+            timeBar.logger.warning("date-format is NOT a valid format! Using default American English format.");
+            exception.printStackTrace();
+            DATE_FORMAT = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
+        }
     }
 
     @Override
@@ -230,7 +252,20 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         }
 
         if (title.contains("{DATE}")) {
-            title = title.replace("{DATE}", date.toString(true));
+            java.util.Date convertedDate = null;
+            try {
+                convertedDate = convertDate.parse(date.toString(true));
+            } catch (ParseException exception) {
+                timeBar.logger.severe("Unable to parse date!");
+                exception.printStackTrace();
+            }
+
+            if (convertedDate == null) {
+                title = title.replace("{DATE}", date.toString(true));
+            } else {
+                String newDate = DATE_FORMAT.format(convertedDate);
+                title = title.replace("{DATE}", newDate);
+            }
         }
         return timeBar.miniMessage.deserialize(title);
     }

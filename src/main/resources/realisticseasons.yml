@@ -9,6 +9,11 @@ use-24h-format: false
 # {DATE} - The current date.
 timebar-title: "{TIME} - {TIME-WORD} ({DATE}) - {SEASON}"
 
+# Change the default formatting for dates.
+# See: https://www.digitalocean.com/community/tutorials/java-simpledateformat-java-date-format
+# Example: "dd/MM/yyyy"
+date-format: "M/dd/yyyy"
+
 # Want to change the wording of the time of days?
 times:
   dawn: "Dawn"
