@@ -134,7 +134,9 @@ public class CommandTimeBar implements TabExecutor {
                 continue;
             }
             for (Player player : world.getPlayers()) {
-                audiences.player(player).showBossBar(timeBar.timeTracker);
+                if (timeBar.enabledBossBar.contains(player)) {
+                    audiences.player(player).showBossBar(timeBar.timeTracker);
+                }
             }
         }
     }
