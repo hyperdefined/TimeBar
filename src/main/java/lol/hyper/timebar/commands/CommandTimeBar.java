@@ -78,9 +78,13 @@ public class CommandTimeBar implements TabExecutor {
                     return true;
                 }
                 Player player = (Player) sender;
-                audiences.player(player).showBossBar(timeBar.timeTracker);
-                audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
+                // if the player is not in a world that is on the list, do not show them it
+                // they will have it enabled, but won't see it
+                if (timeBar.config.getStringList("worlds-to-show-in").contains(player.getWorld().getName())) {
+                    audiences.player(player).showBossBar(timeBar.timeTracker);
+                }
                 timeBar.enabledBossBar.add(player);
+                audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
                 return true;
             }
             case "off": {
