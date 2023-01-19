@@ -21,6 +21,8 @@ import lol.hyper.timebar.TimeBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -56,9 +58,11 @@ public class CommandTimeBar implements TabExecutor {
         switch (args[0]) {
             case "reload": {
                 if (sender.hasPermission("timebar.reload")) {
+                    hideAllBossBars();
                     timeBar.loadConfig();
                     timeBar.startTimer();
                     audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!").color(NamedTextColor.GREEN));
+                    showAllBossBars();
                 } else {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
                 }
@@ -104,5 +108,30 @@ public class CommandTimeBar implements TabExecutor {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         return Arrays.asList("reload", "on", "off");
+    }
+
+    private void hideAllBossBars() {
+        for (String worldName : timeBar.config.getStringList("worlds-to-show-in")) {
+            World world = Bukkit.getWorld(worldName);
+            // skip if the world is null
+            if (world == null) {
+                continue;
+            }
+            for (Player player : world.getPlayers()) {
+                audiences.player(player).hideBossBar(timeBar.timeTracker);
+            }
+        }
+    }
+    private void showAllBossBars() {
+        for (String worldName : timeBar.config.getStringList("worlds-to-show-in")) {
+            World world = Bukkit.getWorld(worldName);
+            // skip if the world is null
+            if (world == null) {
+                continue;
+            }
+            for (Player player : world.getPlayers()) {
+                audiences.player(player).showBossBar(timeBar.timeTracker);
+            }
+        }
     }
 }
