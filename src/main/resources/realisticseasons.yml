@@ -126,4 +126,4 @@ month:
     midnight: "00:00"
 
 # No touch please :)
-config-version: 1
+config-version: 2
