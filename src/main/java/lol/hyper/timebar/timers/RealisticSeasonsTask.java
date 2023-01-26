@@ -79,6 +79,9 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         // this should be null if RealisticSeasons hasn't bet setup yet
         if (currentDate == null) {
             this.timeBar.logger.severe("Cannot retrieve date from RealisticSeasons!");
+            this.timeBar.logger.severe("Most likely, you have not setup RealisticSeasons in the defined world: " + world.getName());
+            this.timeBar.logger.severe("Enter the world and type '/rs set <season>' to setup the world.");
+            this.timeBar.logger.severe("After you setup the season, you can run '/timebar reload'");
             this.cancel();
             return;
         }
