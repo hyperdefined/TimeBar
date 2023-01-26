@@ -7,7 +7,8 @@ use-24h-format: false
 # {DAYCOUNT} - How many total days in game have passed.
 # {SEASON} - The current season.
 # {DATE} - The current date.
-timebar-title: "{TIME} - {TIME-WORD} ({DATE}) - {SEASON}"
+# {DAY} - The day of week.
+timebar-title: "{TIME} - {TIME-WORD} ({DATE}) {DAY} - {SEASON}"
 
 # Change the default formatting for dates.
 # See: https://www.digitalocean.com/community/tutorials/java-simpledateformat-java-date-format

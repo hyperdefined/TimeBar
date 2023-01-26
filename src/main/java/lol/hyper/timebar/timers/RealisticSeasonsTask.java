@@ -27,6 +27,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -253,9 +254,8 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         if (title.contains("{SEASON}")) {
             title = title.replace("{SEASON}", season.toString());
         }
-
+        java.util.Date convertedDate = null;
         if (title.contains("{DATE}")) {
-            java.util.Date convertedDate = null;
             try {
                 convertedDate = convertDate.parse(date.toString(true));
             } catch (ParseException exception) {
@@ -268,6 +268,15 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             } else {
                 String newDate = DATE_FORMAT.format(convertedDate);
                 title = title.replace("{DATE}", newDate);
+            }
+        }
+        if (title.contains("{DAY}")) {
+            if (convertedDate == null) {
+                title = title.replace("{DAY}", "INVALIDDATE");
+            } else {
+                DateFormat dayOfWeekFormat = new SimpleDateFormat("EEEE");
+                String day = dayOfWeekFormat.format(convertedDate);
+                title = title.replace("{DAY}", day);
             }
         }
         return timeBar.miniMessage.deserialize(title);
