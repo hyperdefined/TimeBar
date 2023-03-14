@@ -8,7 +8,8 @@ use-24h-format: false
 # {SEASON} - The current season.
 # {DATE} - The current date.
 # {DAY} - The day of week.
-timebar-title: "{TIME} - {TIME-WORD} ({DATE}) {DAY} - {SEASON}"
+# {MONTH} - The day of week.
+timebar-title: "{TIME} - {TIME-WORD} ({DATE}) {DAY} - {SEASON} - {MONTH}"
 
 # Change the default formatting for dates.
 # See: https://www.digitalocean.com/community/tutorials/java-simpledateformat-java-date-format
@@ -25,11 +26,22 @@ times:
   night: "Night"
   midnight: "Midnight"
 
+# Want to change the wording of the days?
+days:
+  sunday: "Sunday"
+  monday: "Monday"
+  tuesday: "Tuesday"
+  wednesday: "Wednesday"
+  thursday: "Thursday"
+  friday: "Friday"
+  saturday: "Saturday"
+
 # Set each "time of day" for each month.
 # When the time hits one of these, it will turn that "time of day."
 # Example: January at 7:45 AM. It will be dawn.
 month:
   january:
+    name: "January"
     dawn: "06:00"
     morning: "08:30"
     noon: "12:00"
@@ -38,6 +50,7 @@ month:
     night: "18:30"
     midnight: "00:00"
   february:
+    name: "February"
     dawn: "05:25"
     morning: "08:00"
     noon: "12:00"
@@ -46,6 +59,7 @@ month:
     night: "18:50"
     midnight: "00:00"
   march:
+    name: "March"
     dawn: "05:00"
     morning: "07:30"
     noon: "12:00"
@@ -54,6 +68,7 @@ month:
     night: "19:15"
     midnight: "00:00"
   april:
+    name: "April"
     dawn: "04:30"
     morning: "07:00"
     noon: "12:00"
@@ -62,6 +77,7 @@ month:
     night: "19:45"
     midnight: "00:00"
   may:
+    name: "May"
     dawn: "04:00"
     morning: "06:30"
     noon: "12:00"
@@ -70,6 +86,7 @@ month:
     night: "20:05"
     midnight: "00:00"
   june:
+    name: "June"
     dawn: "03:35"
     morning: "06:00"
     noon: "12:00"
@@ -78,6 +95,7 @@ month:
     night: "20:30"
     midnight: "00:00"
   july:
+    name: "July"
     dawn: "03:10"
     morning: "05:30"
     noon: "12:00"
@@ -86,6 +104,7 @@ month:
     night: "21:00"
     midnight: "00:00"
   august:
+    name: "August"
     dawn: "03:35"
     morning: "06:00"
     noon: "12:00"
@@ -94,6 +113,7 @@ month:
     night: "20:30"
     midnight: "00:00"
   september:
+    name: "September"
     dawn: "04:00"
     morning: "06:30"
     noon: "12:00"
@@ -102,6 +122,7 @@ month:
     night: "20:05"
     midnight: "00:00"
   october:
+    name: "October"
     dawn: "04:30"
     morning: "07:00"
     noon: "12:00"
@@ -110,6 +131,7 @@ month:
     night: "19:45"
     midnight: "00:00"
   november:
+    name: "November"
     dawn: "05:00"
     morning: "07:30"
     noon: "12:00"
@@ -118,6 +140,7 @@ month:
     night: "19:15"
     midnight: "00:00"
   december:
+    name: "December"
     dawn: "05:30"
     morning: "08:00"
     noon: "12:00"
@@ -127,4 +150,4 @@ month:
     midnight: "00:00"
 
 # No touch please :)
-config-version: 2
+config-version: 3

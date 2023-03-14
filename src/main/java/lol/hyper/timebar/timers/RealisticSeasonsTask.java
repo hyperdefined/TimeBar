@@ -255,14 +255,13 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             title = title.replace("{SEASON}", season.toString());
         }
         java.util.Date convertedDate = null;
+        try {
+            convertedDate = convertDate.parse(date.toString(true));
+        } catch (ParseException exception) {
+            timeBar.logger.severe("Unable to parse date!");
+            exception.printStackTrace();
+        }
         if (title.contains("{DATE}")) {
-            try {
-                convertedDate = convertDate.parse(date.toString(true));
-            } catch (ParseException exception) {
-                timeBar.logger.severe("Unable to parse date!");
-                exception.printStackTrace();
-            }
-
             if (convertedDate == null) {
                 title = title.replace("{DATE}", date.toString(true));
             } else {
@@ -276,9 +275,29 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             } else {
                 DateFormat dayOfWeekFormat = new SimpleDateFormat("EEEE");
                 String day = dayOfWeekFormat.format(convertedDate);
-                title = title.replace("{DAY}", day);
+                String dayConfig = timeBar.realisticSeasonsConfig.getString("days." + day.toLowerCase());
+                if (dayConfig != null) {
+                    title = title.replace("{DAY}", dayConfig);
+                } else {
+                    title = title.replace("{DAY}", day);
+                }
             }
         }
+        if (title.contains("{MONTH}")) {
+            if (convertedDate == null) {
+                title = title.replace("{MONTH}", "INVALIDDATE");
+            } else {
+                DateFormat monthFormat = new SimpleDateFormat("MMMM");
+                String month = monthFormat.format(convertedDate);
+                String monthConfig = timeBar.realisticSeasonsConfig.getString("month." + month.toLowerCase() + ".name");
+                if (monthConfig != null) {
+                    title = title.replace("{MONTH}", monthConfig);
+                } else {
+                    title = title.replace("{MONTH}", month);
+                }
+            }
+        }
+
         return timeBar.miniMessage.deserialize(title);
     }
 }
