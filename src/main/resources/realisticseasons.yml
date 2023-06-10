@@ -26,16 +26,6 @@ times:
   night: "Night"
   midnight: "Midnight"
 
-# Want to change the wording of the days?
-days:
-  sunday: "Sunday"
-  monday: "Monday"
-  tuesday: "Tuesday"
-  wednesday: "Wednesday"
-  thursday: "Thursday"
-  friday: "Friday"
-  saturday: "Saturday"
-
 # Set each "time of day" for each month.
 # When the time hits one of these, it will turn that "time of day."
 # Example: January at 7:45 AM. It will be dawn.
