@@ -134,8 +134,9 @@
         <dependency>
             <groupId>me.casperge.realisticseasons</groupId>
             <artifactId>RealisticSeasons</artifactId>
-            <version>10.1.7</version>
-            <scope>provided</scope>
+            <version>10.5.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/RealisticSeasons-10.5.1.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

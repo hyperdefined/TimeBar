@@ -27,9 +27,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -41,16 +39,14 @@ public class RealisticSeasonsTask extends BukkitRunnable {
     private final SeasonsAPI seasonsAPI;
     private final World world;
 
-    private SimpleDateFormat DATE_FORMAT;
-    private final SimpleDateFormat convertDate = new SimpleDateFormat("M/d/yyyy");
+    private DateTimeFormatter dateFormatter;
 
     public RealisticSeasonsTask(TimeBar timeBar) {
         this.timeBar = timeBar;
         this.seasonsAPI = SeasonsAPI.getInstance();
         world = Bukkit.getWorld(timeBar.worldName);
+
         String dateFormat = timeBar.realisticSeasonsConfig.getString("date-format");
-
-
         // if these config values are missing, use the default ones
         if (dateFormat == null) {
             dateFormat = "M/dd/yyyy";
@@ -59,11 +55,11 @@ public class RealisticSeasonsTask extends BukkitRunnable {
 
         // test the date format
         try {
-            DATE_FORMAT = new SimpleDateFormat(dateFormat, Locale.getDefault());
+            dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         } catch (NullPointerException | IllegalArgumentException exception) {
             timeBar.logger.warning("date-format is NOT a valid format! Using default American English format.");
             exception.printStackTrace();
-            DATE_FORMAT = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
+            dateFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
         }
     }
 
@@ -254,47 +250,25 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         if (title.contains("{SEASON}")) {
             title = title.replace("{SEASON}", season.toString());
         }
-        java.util.Date convertedDate = null;
-        try {
-            convertedDate = convertDate.parse(date.toString(true));
-        } catch (ParseException exception) {
-            timeBar.logger.severe("Unable to parse date!");
-            exception.printStackTrace();
-        }
+        LocalDate convertedDate = LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
         if (title.contains("{DATE}")) {
-            if (convertedDate == null) {
-                title = title.replace("{DATE}", date.toString(true));
-            } else {
-                String newDate = DATE_FORMAT.format(convertedDate);
-                title = title.replace("{DATE}", newDate);
-            }
+            String newDate = convertedDate.format(dateFormatter);
+            title = title.replace("{DATE}", newDate);
         }
         if (title.contains("{DAY}")) {
-            if (convertedDate == null) {
-                title = title.replace("{DAY}", "INVALIDDATE");
+            String writtenDay = seasonsAPI.getDayOfWeek(world);
+            if (writtenDay.equals("DISABLED")) {
+                title = title.replace("{DAY}", "DISABLED");
             } else {
-                DateFormat dayOfWeekFormat = new SimpleDateFormat("EEEE");
-                String day = dayOfWeekFormat.format(convertedDate);
-                String dayConfig = timeBar.realisticSeasonsConfig.getString("days." + day.toLowerCase());
-                if (dayConfig != null) {
-                    title = title.replace("{DAY}", dayConfig);
-                } else {
-                    title = title.replace("{DAY}", day);
-                }
+                title = title.replace("{DAY}", writtenDay);
             }
         }
         if (title.contains("{MONTH}")) {
-            if (convertedDate == null) {
-                title = title.replace("{MONTH}", "INVALIDDATE");
+            String writtenMonth = seasonsAPI.getCurrentMonthName(world);
+            if (writtenMonth.equals("DISABLED")) {
+                title = title.replace("{MONTH}", "DISABLED");
             } else {
-                DateFormat monthFormat = new SimpleDateFormat("MMMM");
-                String month = monthFormat.format(convertedDate);
-                String monthConfig = timeBar.realisticSeasonsConfig.getString("month." + month.toLowerCase() + ".name");
-                if (monthConfig != null) {
-                    title = title.replace("{MONTH}", monthConfig);
-                } else {
-                    title = title.replace("{MONTH}", month);
-                }
+                title = title.replace("{MONTH}", writtenMonth);
             }
         }
 
