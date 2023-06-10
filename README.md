@@ -19,7 +19,7 @@ TimeBar lets you visualize the current world time as a bossbar. See the time of 
   * Change the text that is shown on it.  
 * Show TimeBar in certain worlds.
 * Disable TimeBar with a command if you don't want to see it.
-* Support for [RealisticSeasons](https://www.spigotmc.org/resources/93275/).
+* Support for [RealisticSeasons](https://www.spigotmc.org/resources/93275/) (must use version 10.5.1 or higher).
 
 ## Documentation
 Visit the [wiki](https://github.com/hyperdefined/TimeBar/wiki) for help.
