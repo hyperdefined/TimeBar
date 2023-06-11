@@ -265,10 +265,13 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         }
         if (title.contains("{MONTH}")) {
             String writtenMonth = seasonsAPI.getCurrentMonthName(world);
+            String configMonth = timeBar.realisticSeasonsConfig.getString("month." + writtenMonth.toLowerCase(Locale.ROOT) + ".name");
             if (writtenMonth.equals("DISABLED")) {
                 title = title.replace("{MONTH}", "DISABLED");
+            } else if (configMonth != null){
+                title = title.replace("{MONTH}", configMonth);
             } else {
-                title = title.replace("{MONTH}", writtenMonth);
+                title = title.replace("{MONTH}", "INVALID");
             }
         }
 
