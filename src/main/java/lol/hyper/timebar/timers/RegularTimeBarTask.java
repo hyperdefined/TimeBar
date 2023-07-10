@@ -20,7 +20,6 @@ package lol.hyper.timebar.timers;
 import lol.hyper.timebar.TimeBar;
 import lol.hyper.timebar.papi.PlaceholderUtil;
 import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

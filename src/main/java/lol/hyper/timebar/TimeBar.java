@@ -26,7 +26,6 @@ import lol.hyper.timebar.timers.RealisticSeasonsTask;
 import lol.hyper.timebar.timers.RegularTimeBarTask;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -46,7 +45,7 @@ public final class TimeBar extends JavaPlugin {
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public final File realisticSeasonsConfigFile = new File(this.getDataFolder(), "realisticseasons.yml");
     public final Logger logger = this.getLogger();
-    public Map<UUID, BossBar> bossBarMap = new HashMap<>();
+    public final Map<UUID, BossBar> bossBarMap = new HashMap<>();
     public FileConfiguration config;
     public FileConfiguration realisticSeasonsConfig;
     public String worldName;
