@@ -18,7 +18,9 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,12 +44,14 @@ public class PlayerJoinLeave implements Listener {
         World world = player.getWorld();
         // if the player joins the server in a world that the bossbar
         // is not enabled in, don't show it
+        BossBar playerBossBar = BossBar.bossBar(Component.text("World Time"), 0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+        timeBar.bossBarMap.put(player.getUniqueId(), playerBossBar);
         if (!timeBar.config.getStringList("worlds-to-show-in").contains(world.getName())) {
-            audiences.player(player).hideBossBar(timeBar.timeTracker);
+            audiences.player(player).hideBossBar(playerBossBar);
             timeBar.enabledBossBar.remove(player);
         } else {
             // show the bossbar if the player joins in a world we display it
-            audiences.player(player).showBossBar(timeBar.timeTracker);
+            audiences.player(player).showBossBar(playerBossBar);
             timeBar.enabledBossBar.add(player);
         }
     }
@@ -55,7 +59,9 @@ public class PlayerJoinLeave implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        audiences.player(player).hideBossBar(timeBar.timeTracker);
+        BossBar playerBossBar = timeBar.bossBarMap.get(player.getUniqueId());
+        audiences.player(player).hideBossBar(playerBossBar);
+        timeBar.bossBarMap.remove(player.getUniqueId());
         timeBar.enabledBossBar.remove(player);
     }
 }

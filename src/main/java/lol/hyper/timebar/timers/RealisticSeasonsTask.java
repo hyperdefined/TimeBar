@@ -18,13 +18,15 @@
 package lol.hyper.timebar.timers;
 
 import lol.hyper.timebar.TimeBar;
+import lol.hyper.timebar.papi.PlaceholderUtil;
 import me.casperge.realisticseasons.api.SeasonsAPI;
 import me.casperge.realisticseasons.calendar.Date;
 import me.casperge.realisticseasons.season.Season;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.LocalDate;
@@ -32,6 +34,8 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 public class RealisticSeasonsTask extends BukkitRunnable {
 
@@ -102,11 +106,25 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         LocalTime currentWorldTime = LocalTime.parse(timeString);
 
         // get the title to display for the bossbar
-        Component title = parseString(world, timeString, getTimeOfDay(month, currentWorldTime), currentSeason, currentDate);
-        timeBar.timeTracker.name(title);
+        String title = parseString(world, timeString, getTimeOfDay(month, currentWorldTime), currentSeason, currentDate);
         // set the progress
         int currentSeconds = (Integer.parseInt(hours) * 3600) + (Integer.parseInt(minutes) * 60) + seconds;
-        timeBar.timeTracker.progress((float) (currentSeconds / 86400.0));
+        float progress = (float) (currentSeconds / 86400.0);
+
+        // loop through all bossbars and format the title
+        for (Map.Entry<UUID, BossBar> entry : timeBar.bossBarMap.entrySet()) {
+            Player player = Bukkit.getPlayer(entry.getKey());
+            BossBar bossBar = entry.getValue();
+            // format if PAPI is detected
+            if (timeBar.papiSupport) {
+                String formattedTitle = PlaceholderUtil.format(player, title);
+                bossBar.name(timeBar.miniMessage.deserialize(formattedTitle));
+            } else {
+                bossBar.name(timeBar.miniMessage.deserialize(title));
+            }
+            bossBar.progress(progress);
+            bossBar.color(timeBar.bossBarColor);
+        }
     }
 
     /**
@@ -222,7 +240,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
      * @param season    The current season.
      * @return Formatted title.
      */
-    private Component parseString(World world, String time, String timeOfDay, Season season, Date date) {
+    private String parseString(World world, String time, String timeOfDay, Season season, Date date) {
         String title = timeBar.realisticSeasonsConfig.getString("timebar-title");
         if (title == null) {
             timeBar.logger.severe("timebar-title is not set! Using default.");
@@ -274,7 +292,6 @@ public class RealisticSeasonsTask extends BukkitRunnable {
                 title = title.replace("{MONTH}", "INVALID");
             }
         }
-
-        return timeBar.miniMessage.deserialize(title);
+        return title;
     }
 }

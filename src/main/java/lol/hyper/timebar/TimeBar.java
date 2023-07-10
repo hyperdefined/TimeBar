@@ -38,9 +38,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.logging.Logger;
 
 public final class TimeBar extends JavaPlugin {
@@ -48,7 +46,7 @@ public final class TimeBar extends JavaPlugin {
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public final File realisticSeasonsConfigFile = new File(this.getDataFolder(), "realisticseasons.yml");
     public final Logger logger = this.getLogger();
-    public BossBar timeTracker;
+    public Map<UUID, BossBar> bossBarMap = new HashMap<>();
     public FileConfiguration config;
     public FileConfiguration realisticSeasonsConfig;
     public String worldName;
@@ -62,15 +60,22 @@ public final class TimeBar extends JavaPlugin {
     public CommandTimeBar commandReload;
     public BukkitTask timeBarTask;
 
+    public boolean papiSupport = false;
+    public BossBar.Color bossBarColor;
+
     @Override
     public void onEnable() {
         adventure = BukkitAudiences.create(this);
-        timeTracker = BossBar.bossBar(Component.text("World Time"), 0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
 
         loadConfig();
         playerJoinLeave = new PlayerJoinLeave(this);
         worldChange = new WorldChange(this);
         commandReload = new CommandTimeBar(this);
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            papiSupport = true;
+            logger.info("PlaceholderAPI is detected! Enabling support.");
+        }
 
         this.getCommand("timebar").setExecutor(commandReload);
 
@@ -108,10 +113,10 @@ public final class TimeBar extends JavaPlugin {
         String color = config.getString("titlebar-color");
         if (color == null) {
             // default to blue since I like it
-            timeTracker.color(BossBar.Color.BLUE);
+            bossBarColor = BossBar.Color.BLUE;
         } else {
             color = color.toUpperCase(Locale.ROOT);
-            timeTracker.color(BossBar.Color.valueOf(color));
+            bossBarColor = BossBar.Color.valueOf(color);
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {

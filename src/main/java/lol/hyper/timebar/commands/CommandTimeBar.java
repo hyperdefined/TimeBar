@@ -18,6 +18,8 @@
 package lol.hyper.timebar.commands;
 
 import lol.hyper.timebar.TimeBar;
+import lol.hyper.timebar.papi.PlaceholderUtil;
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -32,6 +34,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class CommandTimeBar implements TabExecutor {
 
@@ -81,7 +85,8 @@ public class CommandTimeBar implements TabExecutor {
                 // if the player is not in a world that is on the list, do not show them it
                 // they will have it enabled, but won't see it
                 if (timeBar.config.getStringList("worlds-to-show-in").contains(player.getWorld().getName())) {
-                    audiences.player(player).showBossBar(timeBar.timeTracker);
+                    BossBar bossBar = timeBar.bossBarMap.get(player.getUniqueId());
+                    audiences.player(player).showBossBar(bossBar);
                 }
                 timeBar.enabledBossBar.add(player);
                 audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
@@ -97,7 +102,8 @@ public class CommandTimeBar implements TabExecutor {
                     return true;
                 }
                 Player player = (Player) sender;
-                audiences.player(player).hideBossBar(timeBar.timeTracker);
+                BossBar bossBar = timeBar.bossBarMap.get(player.getUniqueId());
+                audiences.player(player).hideBossBar(bossBar);
                 audiences.player(player).sendMessage(Component.text("TimeBar is now disabled.").color(NamedTextColor.GREEN));
                 timeBar.enabledBossBar.remove(player);
                 return true;
@@ -121,8 +127,13 @@ public class CommandTimeBar implements TabExecutor {
             if (world == null) {
                 continue;
             }
-            for (Player player : world.getPlayers()) {
-                audiences.player(player).hideBossBar(timeBar.timeTracker);
+            for (Map.Entry<UUID, BossBar> entry : timeBar.bossBarMap.entrySet()) {
+                Player player = Bukkit.getPlayer(entry.getKey());
+                if (player == null) {
+                    continue;
+                }
+                BossBar bossBar = entry.getValue();
+                audiences.player(player).hideBossBar(bossBar);
             }
         }
     }
@@ -133,10 +144,13 @@ public class CommandTimeBar implements TabExecutor {
             if (world == null) {
                 continue;
             }
-            for (Player player : world.getPlayers()) {
-                if (timeBar.enabledBossBar.contains(player)) {
-                    audiences.player(player).showBossBar(timeBar.timeTracker);
+            for (Map.Entry<UUID, BossBar> entry : timeBar.bossBarMap.entrySet()) {
+                Player player = Bukkit.getPlayer(entry.getKey());
+                if (player == null) {
+                    continue;
                 }
+                BossBar bossBar = entry.getValue();
+                audiences.player(player).showBossBar(bossBar);
             }
         }
     }

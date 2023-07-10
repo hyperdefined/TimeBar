@@ -18,6 +18,7 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -44,18 +45,19 @@ public class WorldChange implements Listener {
 
         Player player = event.getPlayer();
         World newWorld = player.getWorld();
+        BossBar bossBar = timeBar.bossBarMap.get(player.getUniqueId());
 
         // Check to see if the player is going to a world that the TimeBar is enabled in
         // If the player goes to a world on the list, show them the bar
         // If not, remove it
         if (timeBar.config.getStringList("worlds-to-show-in").contains(newWorld.getName())) {
             if (timeBar.enabledBossBar.contains(player)) {
-                audiences.player(player).showBossBar(timeBar.timeTracker);
+                audiences.player(player).showBossBar(bossBar);
             } else {
-                audiences.player(player).hideBossBar(timeBar.timeTracker);
+                audiences.player(player).hideBossBar(bossBar);
             }
         } else {
-            audiences.player(player).hideBossBar(timeBar.timeTracker);
+            audiences.player(player).hideBossBar(bossBar);
         }
     }
 }
