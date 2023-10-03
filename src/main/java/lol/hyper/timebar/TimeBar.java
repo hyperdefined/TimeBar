@@ -119,7 +119,7 @@ public final class TimeBar extends JavaPlugin {
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
-        	logger.info("RealisticSeasons is detected! Enabling support.");
+            logger.info("RealisticSeasons is detected! Enabling support.");
             if (!realisticSeasonsConfigFile.exists()) {
                 this.saveResource("realisticseasons.yml", true);
             }
@@ -155,7 +155,7 @@ public final class TimeBar extends JavaPlugin {
     }
 
     public BukkitAudiences getAdventure() {
-        if(this.adventure == null) {
+        if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
@@ -163,8 +163,8 @@ public final class TimeBar extends JavaPlugin {
 
     public void startTimer() {
         if (timeBarTask != null) {
-                timeBarTask.cancel();
-                logger.info("Stopping current TimeBar task...");
+            timeBarTask.cancel();
+            logger.info("Stopping current TimeBar task...");
         }
         if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
             timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(this, 0, config.getInt("bar-update-frequency"));

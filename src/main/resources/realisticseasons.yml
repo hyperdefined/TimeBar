@@ -8,7 +8,7 @@ use-24h-format: false
 # {SEASON} - The current season.
 # {DATE} - The current date.
 # {DAY} - The day of week.
-# {MONTH} - The day of week.
+# {MONTH} - The month.
 timebar-title: "{TIME} - {TIME-WORD} ({DATE}) {DAY} - {SEASON} - {MONTH}"
 
 # Change the default formatting for dates.
