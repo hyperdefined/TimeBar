@@ -18,8 +18,7 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import lol.hyper.timebar.WorldTimeTracker;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,35 +28,37 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 public class WorldChange implements Listener {
 
     private final TimeBar timeBar;
-    private final BukkitAudiences audiences;
 
     public WorldChange(TimeBar timeBar) {
         this.timeBar = timeBar;
-        this.audiences = timeBar.getAdventure();
     }
 
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
-        // Check the worlds list in the config, if it's empty, then we can ignore this event
-        if (timeBar.config.getStringList("worlds-to-show-in").isEmpty()) {
-            return;
-        }
-
         Player player = event.getPlayer();
         World newWorld = player.getWorld();
-        BossBar bossBar = timeBar.bossBarMap.get(player.getUniqueId());
+        World oldWorld = event.getFrom();
 
-        // Check to see if the player is going to a world that the TimeBar is enabled in
-        // If the player goes to a world on the list, show them the bar
-        // If not, remove it
-        if (timeBar.config.getStringList("worlds-to-show-in").contains(newWorld.getName())) {
-            if (timeBar.enabledBossBar.contains(player)) {
-                audiences.player(player).showBossBar(bossBar);
-            } else {
-                audiences.player(player).hideBossBar(bossBar);
+        // get tracker from old location
+        WorldTimeTracker oldTracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(oldWorld)).findFirst().orElse(null);
+        // get tracker for new location
+        WorldTimeTracker newTracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(newWorld)).findFirst().orElse(null);
+        if (oldTracker != null) {
+            // if they moved to a new tracker group
+            if (!oldTracker.worldGroup().contains(newWorld)) {
+                oldTracker.removePlayer(player);
+                // if the new world has a tracker, add them
+                if (newTracker != null) {
+                    // perform the swap
+                    newTracker.addPlayer(player);
+                }
             }
         } else {
-            audiences.player(player).hideBossBar(bossBar);
+            // player is coming from a world that doesn't have a tracker
+            // if the new world has a tracker, add them
+            if (newTracker != null) {
+                newTracker.addPlayer(player);
+            }
         }
     }
 }

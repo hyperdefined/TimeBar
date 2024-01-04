@@ -1,9 +1,13 @@
-# Set which world will TimeBar show the time for.
-world-to-track-time: "world"
-
-# Set which worlds the TimeBar will show in.
-worlds-to-show-in:
-  - "world"
+# Set which worlds track time and which worlds show that time.
+worlds:
+  # Time will track in world and display in world_nether and world_the_end (and itself).
+  world:
+    - world_nether
+    - world_the_end
+  # Time will track in world2 and display in world2_nether and world2_the_end (and itself).
+  world2:
+    - world2_nether
+    - world2_the_end
 
 # Set the color of the TimeBar.
 # The valid options are: blue, green, pink, purple, red, white, and yellow.
@@ -41,4 +45,4 @@ times-of-day:
   midnight: 18000
 
 # No touch please :)
-config-version: 3
+config-version: 4

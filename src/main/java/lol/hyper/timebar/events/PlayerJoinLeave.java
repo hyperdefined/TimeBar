@@ -18,10 +18,7 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
-import org.bukkit.World;
+import lol.hyper.timebar.WorldTimeTracker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,37 +28,34 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerJoinLeave implements Listener {
 
     private final TimeBar timeBar;
-    private final BukkitAudiences audiences;
 
     public PlayerJoinLeave(TimeBar timeBar) {
         this.timeBar = timeBar;
-        this.audiences = timeBar.getAdventure();
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        World world = player.getWorld();
-        // if the player joins the server in a world that the bossbar
-        // is not enabled in, don't show it
-        BossBar playerBossBar = BossBar.bossBar(Component.text("World Time"), 0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
-        timeBar.bossBarMap.put(player.getUniqueId(), playerBossBar);
-        if (!timeBar.config.getStringList("worlds-to-show-in").contains(world.getName())) {
-            audiences.player(player).hideBossBar(playerBossBar);
-            timeBar.enabledBossBar.remove(player);
-        } else {
-            // show the bossbar if the player joins in a world we display it
-            audiences.player(player).showBossBar(playerBossBar);
+
+        // add player to tracker
+        WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().orElse(null);
+        // if the world has a tracker, add them
+        if (tracker != null) {
             timeBar.enabledBossBar.add(player);
+            tracker.addPlayer(player);
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        BossBar playerBossBar = timeBar.bossBarMap.get(player.getUniqueId());
-        audiences.player(player).hideBossBar(playerBossBar);
-        timeBar.bossBarMap.remove(player.getUniqueId());
-        timeBar.enabledBossBar.remove(player);
+
+        // remove player from tracker since they left
+        WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().orElse(null);
+        // if the world has a tracker, remove them
+        if (tracker != null) {
+            tracker.removePlayer(player);
+            timeBar.enabledBossBar.remove(player);
+        }
     }
 }

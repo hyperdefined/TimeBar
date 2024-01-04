@@ -18,7 +18,7 @@
 package lol.hyper.timebar.commands;
 
 import lol.hyper.timebar.TimeBar;
-import net.kyori.adventure.bossbar.BossBar;
+import lol.hyper.timebar.WorldTimeTracker;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -33,8 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class CommandTimeBar implements TabExecutor {
 
@@ -61,11 +59,21 @@ public class CommandTimeBar implements TabExecutor {
         switch (args[0]) {
             case "reload": {
                 if (sender.hasPermission("timebar.reload")) {
-                    hideAllBossBars();
+                    // this is a bit ugly, but it should be done in this order
+                    // hide the bossbars, reload config, then start them again
+                    for (WorldTimeTracker worldTimeTracker : timeBar.worldTimeTrackers) {
+                        worldTimeTracker.hideBossBars();
+                    }
+                    timeBar.worldTimeTrackers.clear();
                     timeBar.loadConfig();
-                    timeBar.startTimer();
+                    // add all players online back into trackers
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().ifPresent(tracker -> tracker.addPlayer(player));
+                    }
+                    for (WorldTimeTracker worldTimeTracker : timeBar.worldTimeTrackers) {
+                        worldTimeTracker.startTimer();
+                    }
                     audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!").color(NamedTextColor.GREEN));
-                    showAllBossBars();
                 } else {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
                 }
@@ -81,13 +89,16 @@ public class CommandTimeBar implements TabExecutor {
                     return true;
                 }
                 Player player = (Player) sender;
-                // if the player is not in a world that is on the list, do not show them it
-                // they will have it enabled, but won't see it
-                if (timeBar.config.getStringList("worlds-to-show-in").contains(player.getWorld().getName())) {
-                    BossBar bossBar = timeBar.bossBarMap.get(player.getUniqueId());
-                    audiences.player(player).showBossBar(bossBar);
+                World world = player.getWorld();
+
+                // show them the bossbar
+                WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(world)).findFirst().orElse(null);
+                // showPlayer will add them to the list, but if their world doesn't have a tracker, add them manually
+                if (tracker != null) {
+                    tracker.showPlayer(player);
+                } else {
+                    timeBar.enabledBossBar.add(player);
                 }
-                timeBar.enabledBossBar.add(player);
                 audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
                 return true;
             }
@@ -101,10 +112,17 @@ public class CommandTimeBar implements TabExecutor {
                     return true;
                 }
                 Player player = (Player) sender;
-                BossBar bossBar = timeBar.bossBarMap.get(player.getUniqueId());
-                audiences.player(player).hideBossBar(bossBar);
+                World world = player.getWorld();
+
+                // hide the bossbar
+                WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(world)).findFirst().orElse(null);
+                // hidePlayer will remove them from the list, but if their world doesn't have a tracker, remove them manually
+                if (tracker != null) {
+                    tracker.hidePlayer(player);
+                } else {
+                    timeBar.enabledBossBar.remove(player);
+                }
                 audiences.player(player).sendMessage(Component.text("TimeBar is now disabled.").color(NamedTextColor.GREEN));
-                timeBar.enabledBossBar.remove(player);
                 return true;
             }
             default: {
@@ -117,40 +135,5 @@ public class CommandTimeBar implements TabExecutor {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         return Arrays.asList("reload", "on", "off");
-    }
-
-    private void hideAllBossBars() {
-        for (String worldName : timeBar.config.getStringList("worlds-to-show-in")) {
-            World world = Bukkit.getWorld(worldName);
-            // skip if the world is null
-            if (world == null) {
-                continue;
-            }
-            for (Map.Entry<UUID, BossBar> entry : timeBar.bossBarMap.entrySet()) {
-                Player player = Bukkit.getPlayer(entry.getKey());
-                if (player == null) {
-                    continue;
-                }
-                BossBar bossBar = entry.getValue();
-                audiences.player(player).hideBossBar(bossBar);
-            }
-        }
-    }
-    private void showAllBossBars() {
-        for (String worldName : timeBar.config.getStringList("worlds-to-show-in")) {
-            World world = Bukkit.getWorld(worldName);
-            // skip if the world is null
-            if (world == null) {
-                continue;
-            }
-            for (Map.Entry<UUID, BossBar> entry : timeBar.bossBarMap.entrySet()) {
-                Player player = Bukkit.getPlayer(entry.getKey());
-                if (player == null) {
-                    continue;
-                }
-                BossBar bossBar = entry.getValue();
-                audiences.player(player).showBossBar(bossBar);
-            }
-        }
     }
 }
