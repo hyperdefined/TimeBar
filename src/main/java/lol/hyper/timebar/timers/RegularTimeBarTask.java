@@ -17,17 +17,14 @@
 
 package lol.hyper.timebar.timers;
 
-import lol.hyper.timebar.TimeBar;
-import lol.hyper.timebar.WorldTimeTracker;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.papi.PlaceholderUtil;
 import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
-import java.util.UUID;
 
 public class RegularTimeBarTask extends BukkitRunnable {
 
@@ -49,7 +46,7 @@ public class RegularTimeBarTask extends BukkitRunnable {
         String title = getTimeOfDay(time);
 
         // loop through all bossbars and format the title
-        for (Map.Entry<Player, BossBar> entry : worldTimeTracker.bossBars.entrySet()) {
+        for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
             Player player = entry.getKey();
             BossBar bossBar = entry.getValue();
             // format if PAPI is detected
@@ -103,7 +100,6 @@ public class RegularTimeBarTask extends BukkitRunnable {
      * @return The time of day.
      */
     private String getTimeOfDay(int time) {
-        String title;
         // set the time of day depending on the time
         // dawn
         if (time >= getTime("dawn") || time < getTime("morning")) {

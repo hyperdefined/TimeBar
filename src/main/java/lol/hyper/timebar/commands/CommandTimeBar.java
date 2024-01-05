@@ -18,7 +18,7 @@
 package lol.hyper.timebar.commands;
 
 import lol.hyper.timebar.TimeBar;
-import lol.hyper.timebar.WorldTimeTracker;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

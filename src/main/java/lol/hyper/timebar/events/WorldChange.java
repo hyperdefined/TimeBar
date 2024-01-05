@@ -18,10 +18,11 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
-import lol.hyper.timebar.WorldTimeTracker;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
@@ -33,7 +34,7 @@ public class WorldChange implements Listener {
         this.timeBar = timeBar;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         World newWorld = player.getWorld();

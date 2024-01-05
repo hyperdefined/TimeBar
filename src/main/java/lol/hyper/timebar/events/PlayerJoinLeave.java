@@ -18,9 +18,10 @@
 package lol.hyper.timebar.events;
 
 import lol.hyper.timebar.TimeBar;
-import lol.hyper.timebar.WorldTimeTracker;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -33,7 +34,7 @@ public class PlayerJoinLeave implements Listener {
         this.timeBar = timeBar;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 

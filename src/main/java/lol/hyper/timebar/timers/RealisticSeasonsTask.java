@@ -17,7 +17,7 @@
 
 package lol.hyper.timebar.timers;
 
-import lol.hyper.timebar.WorldTimeTracker;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.papi.PlaceholderUtil;
 import me.casperge.realisticseasons.api.SeasonsAPI;
 import me.casperge.realisticseasons.calendar.Date;
@@ -72,9 +72,9 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         Date currentDate = this.seasonsAPI.getDate(world);
         // this should be null if RealisticSeasons hasn't bet setup yet
         if (currentDate == null) {
-            worldTimeTracker.timeBar.logger.severe("Cannot retrieve date from RealisticSeasons!");
-            worldTimeTracker.timeBar.logger.severe("Most likely, you have not setup RealisticSeasons in the defined world: " + world.getName());
-            worldTimeTracker.timeBar.logger.severe("Enter the world and type '/rs set <season>' to setup the world.");
+            worldTimeTracker.timeBar.logger.severe("Cannot retrieve date from RealisticSeasons for world " + world.getName());
+            worldTimeTracker.timeBar.logger.severe("Most likely means you did not setup RS for that defined world.");
+            worldTimeTracker.timeBar.logger.severe("Enter the world and type '/rs set <season>'");
             worldTimeTracker.timeBar.logger.severe("After you setup the season, you can run '/timebar reload'");
             this.cancel();
             return;
@@ -105,7 +105,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         float progress = (float) (currentSeconds / 86400.0);
 
         // loop through all bossbars and format the title
-        for (Map.Entry<Player, BossBar> entry : worldTimeTracker.bossBars.entrySet()) {
+        for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
             Player player = entry.getKey();
             BossBar bossBar = entry.getValue();
             // format if PAPI is detected

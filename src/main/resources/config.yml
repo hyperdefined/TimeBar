@@ -1,11 +1,15 @@
 # Set which worlds track time and which worlds show that time.
 worlds:
-  # Time will track in world and display in world_nether and world_the_end (and itself).
+  # Set a TimeBar for "world".
   world:
+    # Display the TimeBar for "world" in these worlds below.
+    - world
     - world_nether
     - world_the_end
-  # Time will track in world2 and display in world2_nether and world2_the_end (and itself).
+  # Set a TimeBar for "world2".
   world2:
+    # Display the TimeBar for "world2" in these worlds below.
+    - world2
     - world2_nether
     - world2_the_end
 

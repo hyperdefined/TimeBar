@@ -22,6 +22,7 @@ import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.PlayerJoinLeave;
 import lol.hyper.timebar.events.WorldChange;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -95,11 +96,13 @@ public final class TimeBar extends JavaPlugin {
         int CONFIG_VERSION = 4;
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("You configuration is out of date! Some features may not work!");
+            // don't feel like adding a config updater
             if (config.getInt("config-version") == 3) {
                 logger.warning("The configuration system has changed for this version. Please delete your configs and restart the server.");
             }
         }
 
+        // make sure there are worlds on the list
         ConfigurationSection worldsSection = config.getConfigurationSection("worlds");
         if (worldsSection == null) {
             logger.severe("No worlds section found in config! Plugin is unable to function.");
@@ -127,8 +130,6 @@ public final class TimeBar extends JavaPlugin {
                     logger.warning(worldName + " is not a valid world, skipping...");
                 }
             }
-            // make sure to add the world itself
-            displayWorlds.add(mainWorld);
 
             WorldTimeTracker worldTimeTracker = new WorldTimeTracker(this, mainWorld, displayWorlds);
             worldTimeTrackers.add(worldTimeTracker);
