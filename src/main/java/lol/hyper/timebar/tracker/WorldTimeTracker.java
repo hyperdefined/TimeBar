@@ -107,7 +107,7 @@ public class WorldTimeTracker {
         }
         int updateFrequency = timeBar.config.getInt("bar-update-frequency");
         String allWorldNames = worldGroup.stream().map(World::getName).collect(Collectors.joining(", "));
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
+        if (timeBar.realisticSeasons) {
             timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(timeBar, 0, updateFrequency);
             timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'" + " (RealisticSeasons support)");
             timeBar.logger.info("Display worlds: [" + allWorldNames + "]");

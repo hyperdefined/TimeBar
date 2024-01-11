@@ -58,21 +58,26 @@ public final class TimeBar extends JavaPlugin {
     public CommandTimeBar commandReload;
 
     public boolean papiSupport = false;
+    public boolean realisticSeasons = false;
     public BossBar.Color bossBarColor;
 
     @Override
     public void onEnable() {
         adventure = BukkitAudiences.create(this);
 
-        loadConfig();
-        playerJoinLeave = new PlayerJoinLeave(this);
-        worldChange = new WorldChange(this);
-        commandReload = new CommandTimeBar(this);
-
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             papiSupport = true;
             logger.info("PlaceholderAPI is detected! Enabling support.");
         }
+        if (Bukkit.getPluginManager().getPlugin("RealisticSeasons") != null) {
+            realisticSeasons = true;
+            logger.info("RealisticSeasons is detected! Enabling support.");
+        }
+
+        loadConfig();
+        playerJoinLeave = new PlayerJoinLeave(this);
+        worldChange = new WorldChange(this);
+        commandReload = new CommandTimeBar(this);
 
         this.getCommand("timebar").setExecutor(commandReload);
 
@@ -144,8 +149,7 @@ public final class TimeBar extends JavaPlugin {
             bossBarColor = BossBar.Color.valueOf(color);
         }
 
-        if (this.getServer().getPluginManager().isPluginEnabled("RealisticSeasons")) {
-            logger.info("RealisticSeasons is detected! Enabling support.");
+        if (realisticSeasons) {
             if (!realisticSeasonsConfigFile.exists()) {
                 this.saveResource("realisticseasons.yml", true);
             }
@@ -185,5 +189,9 @@ public final class TimeBar extends JavaPlugin {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
+    }
+
+    public WorldTimeTracker getPlayerTracker(Player player) {
+        return worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().orElse(null);
     }
 }

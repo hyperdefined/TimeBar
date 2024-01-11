@@ -39,10 +39,10 @@ public class PlayerJoinLeave implements Listener {
         Player player = event.getPlayer();
 
         // add player to tracker
-        WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().orElse(null);
+        WorldTimeTracker tracker = timeBar.getPlayerTracker(player);
+        timeBar.enabledBossBar.add(player);
         // if the world has a tracker, add them
         if (tracker != null) {
-            timeBar.enabledBossBar.add(player);
             tracker.addPlayer(player);
         }
     }
@@ -52,7 +52,7 @@ public class PlayerJoinLeave implements Listener {
         Player player = event.getPlayer();
 
         // remove player from tracker since they left
-        WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().orElse(null);
+        WorldTimeTracker tracker = timeBar.getPlayerTracker(player);
         // if the world has a tracker, remove them
         if (tracker != null) {
             tracker.removePlayer(player);
