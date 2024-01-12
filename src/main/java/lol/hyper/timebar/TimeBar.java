@@ -121,7 +121,7 @@ public final class TimeBar extends JavaPlugin {
             World mainWorld = Bukkit.getWorld(worldName);
             // skip if the world is invalid
             if (mainWorld == null) {
-                logger.warning(worldName + " is not a valid world, skipping...");
+                logger.warning(worldName + " is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'");
                 continue;
             }
             // these are the worlds to display the timebar based on this world
@@ -132,7 +132,7 @@ public final class TimeBar extends JavaPlugin {
                 if (world != null) {
                     displayWorlds.add(world);
                 } else {
-                    logger.warning(worldName + " is not a valid world, skipping...");
+                    logger.warning(worldName + " is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'");
                 }
             }
 
@@ -145,8 +145,14 @@ public final class TimeBar extends JavaPlugin {
             // default to blue since I like it
             bossBarColor = BossBar.Color.BLUE;
         } else {
+            // convert to uppercase and see if it's a real color
             color = color.toUpperCase(Locale.ROOT);
-            bossBarColor = BossBar.Color.valueOf(color);
+            try {
+                bossBarColor = BossBar.Color.valueOf(color);
+            } catch (IllegalArgumentException exception) {
+                logger.warning(color + " is not a valid bossbar color. Defaulting to blue.");
+                bossBarColor = BossBar.Color.BLUE;
+            }
         }
 
         if (realisticSeasons) {
