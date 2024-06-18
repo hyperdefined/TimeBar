@@ -44,9 +44,11 @@ public final class TimeBar extends JavaPlugin {
 
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public final File realisticSeasonsConfigFile = new File(this.getDataFolder(), "realisticseasons.yml");
+    public final File advancedSeasonsConfigFile = new File(this.getDataFolder(), "advancedseasons.yml");
     public final Logger logger = this.getLogger();
     public FileConfiguration config;
     public FileConfiguration realisticSeasonsConfig;
+    public FileConfiguration advancedSeasonsConfig;
     public final Set<Player> enabledBossBar = new HashSet<>();
     public final List<WorldTimeTracker> worldTimeTrackers = new ArrayList<>();
 
@@ -59,6 +61,7 @@ public final class TimeBar extends JavaPlugin {
 
     public boolean papiSupport = false;
     public boolean realisticSeasons = false;
+    public boolean advancedSeasons = false;
     public BossBar.Color bossBarColor;
 
     @Override
@@ -72,6 +75,10 @@ public final class TimeBar extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("RealisticSeasons") != null) {
             realisticSeasons = true;
             logger.info("RealisticSeasons is detected! Enabling support.");
+        }
+        if (Bukkit.getPluginManager().getPlugin("AdvancedSeasons") != null) {
+            advancedSeasons = true;
+            logger.info("AdvancedSeasons is detected! Enabling support.");
         }
 
         loadConfig();
@@ -160,9 +167,19 @@ public final class TimeBar extends JavaPlugin {
                 this.saveResource("realisticseasons.yml", true);
             }
             realisticSeasonsConfig = YamlConfiguration.loadConfiguration(realisticSeasonsConfigFile);
-            int SEASONS_CONFIG_VERSION = 3;
-            if (realisticSeasonsConfig.getInt("config-version") != SEASONS_CONFIG_VERSION) {
-                logger.warning("You seasons configuration is out of date! Some features may not work!");
+            int REALISTIC_SEASONS_CONFIG_VERSION = 3;
+            if (realisticSeasonsConfig.getInt("config-version") != REALISTIC_SEASONS_CONFIG_VERSION) {
+                logger.warning("Your /plugins/TimeBar/realisticseasons.yml configuration is out of date! Some features may not work!");
+            }
+        }
+        if (advancedSeasons) {
+            if (!advancedSeasonsConfigFile.exists()) {
+                this.saveResource("advancedseasons.yml", true);
+            }
+            advancedSeasonsConfig = YamlConfiguration.loadConfiguration(advancedSeasonsConfigFile);
+            int ADVANCED_SEASONS_CONFIG_VERSION = 1;
+            if (advancedSeasonsConfig.getInt("config-version") != ADVANCED_SEASONS_CONFIG_VERSION) {
+                logger.warning("Your /plugins/TimeBar/advancedseasons.yml configuration is out of date! Some features may not work!");
             }
         }
     }

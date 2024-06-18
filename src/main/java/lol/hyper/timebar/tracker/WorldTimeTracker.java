@@ -18,11 +18,11 @@
 package lol.hyper.timebar.tracker;
 
 import lol.hyper.timebar.TimeBar;
+import lol.hyper.timebar.timers.AdvancedSeasonsTask;
 import lol.hyper.timebar.timers.RealisticSeasonsTask;
 import lol.hyper.timebar.timers.RegularTimeBarTask;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -110,6 +110,10 @@ public class WorldTimeTracker {
         if (timeBar.realisticSeasons) {
             timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(timeBar, 0, updateFrequency);
             timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'" + " (RealisticSeasons support)");
+            timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
+        } else if (timeBar.advancedSeasons) {
+            timeBarTask = new AdvancedSeasonsTask(this).runTaskTimer(timeBar, 0, updateFrequency);
+            timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'" + " (AdvancedSeasons support)");
             timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
         } else {
             timeBarTask = new RegularTimeBarTask(this).runTaskTimer(timeBar, 0, updateFrequency);

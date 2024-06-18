@@ -29,7 +29,7 @@
     <name>TimeBar</name>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -141,6 +141,13 @@
             <version>10.5.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/RealisticSeasons-10.5.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>net.advancedplugins</groupId>
+            <artifactId>seasons</artifactId>
+            <version>1.3.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/AdvancedSeasons-API.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

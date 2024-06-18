@@ -1,0 +1,16 @@
+# Set the text of the TimeBar.
+# {TIME} - The time to display. Dawn, afternoon, etc.
+# {DAYCOUNT} - How many total days in game have passed.
+# {SEASON} - The current season.
+# {TEMP} - The temperature of the world.
+timebar-title: "{TIME} (Day {DAYCOUNT}) {SEASON} - {TEMP}"
+
+# Set the display name for seasons
+seasons:
+  SPRING: "Spring"
+  SUMMER: "Summer"
+  FALL: "Fall"
+  WINTER: "Winter"
+
+# No touch please :)
+config-version: 1
