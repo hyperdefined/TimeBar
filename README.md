@@ -17,7 +17,7 @@ TimeBar lets you visualize the current world time as a bossbar. See the time of 
 * Completely customized how the TimeBar looks.
   * Change the color.
   * Change the text that is shown on it.
-* PlaceHolderAPI support. 
+* [PlaceHolderAPI](https://github.com/hyperdefined/TimeBar/wiki/PlaceHolderAPI-Usage) support. 
 * Configure multiple TimeBars and which worlds they display in.
 * Disable TimeBar with a command if you don't want to see it.
 * Support for [RealisticSeasons](https://www.spigotmc.org/resources/93275/) (must use version 10.5.1 or higher).
