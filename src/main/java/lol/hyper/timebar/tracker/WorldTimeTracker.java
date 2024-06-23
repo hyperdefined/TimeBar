@@ -41,6 +41,10 @@ public class WorldTimeTracker {
 
     private BukkitTask timeBarTask;
 
+    private String timeOfDay;
+    private int dayCount;
+    private float dayPercent;
+
     /**
      * Creates a tracker for a collection of worlds.
      *
@@ -160,5 +164,29 @@ public class WorldTimeTracker {
             timeBar.getAdventure().player(player).showBossBar(bossBar);
         }
         timeBar.enabledBossBar.add(player);
+    }
+
+    public void setDayCount(int dayCount) {
+        this.dayCount = dayCount;
+    }
+
+    public void setDayPercent(float dayPercent) {
+        this.dayPercent = dayPercent;
+    }
+
+    public void setTimeOfDay(String timeOfDay) {
+        this.timeOfDay = timeOfDay;
+    }
+
+    public String getDayPercent() {
+        return String.format("%.2f", dayPercent) + "%";
+    }
+
+    public String getDayCount() {
+        return String.valueOf(dayCount);
+    }
+
+    public String getTimeOfDay() {
+        return timeOfDay;
     }
 }

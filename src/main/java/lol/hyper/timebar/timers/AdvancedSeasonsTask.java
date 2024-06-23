@@ -43,29 +43,24 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         // get the current time
         int time = (int) world.getTime();
         float progress = (float) (time / 24000.0);
+        float timePercent = progress * 100;
+        int dayCount = (int) (world.getFullTime() / 24000);
+        String timeOfDay = getTimeOfDay(time);
 
-        // get the title
-        String title = getTimeOfDay(time);
-        // add the season
-        if (title.contains("{SEASON}")) {
-            String season = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("seasons." + api.getSeason(world));
-            if (season == null) {
-                worldTimeTracker.timeBar.logger.warning("Unable to load custom season name for " + api.getSeason(world) + " from /plugins/TimeBar/advancedseasons.yml");
-                season = api.getSeason(world);
-            }
-            title = title.replace("{SEASON}", season);
-        }
+        // store these into the tracker
+        worldTimeTracker.setDayPercent(timePercent);
+        worldTimeTracker.setDayCount(dayCount);
+        worldTimeTracker.setTimeOfDay(timeOfDay);
 
         // loop through all bossbars and format the title
         for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
             Player player = entry.getKey();
             BossBar bossBar = entry.getValue();
             int temp = api.getTemperature(player);
+            String season = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("seasons." + api.getSeason(world));
 
-            // add the temp. this is per player so we do it here
-            if (title.contains("{TEMP}")) {
-                title = title.replace("{TEMP}", temp + "°C");
-            }
+            // format the title
+            String title = parseTitle(timeOfDay, dayCount, season, temp, timePercent);
 
             // format if PAPI is detected
             if (worldTimeTracker.timeBar.papiSupport) {
@@ -80,12 +75,16 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
     }
 
     /**
-     * Parses the title, which formats any placeholders.
+     * Format the title.
      *
-     * @param time The current time string.
-     * @return Formatted title.
+     * @param timeOfDay The time of day.
+     * @param dayCount  The day count.
+     * @param season    The current season.
+     * @param temp      The player's temperature.
+     * @param progress  The day progress.
+     * @return The formatted title.
      */
-    private String formatTitle(String time) {
+    private String parseTitle(String timeOfDay, int dayCount, String season, int temp, float progress) {
         String title = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("timebar-title");
         if (title == null) {
             worldTimeTracker.timeBar.logger.severe("timebar-title is not set! Using default.");
@@ -93,11 +92,23 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         }
 
         if (title.contains("{TIME}")) {
-            title = title.replace("{TIME}", time);
+            title = title.replace("{TIME}", timeOfDay);
         }
 
         if (title.contains("{DAYCOUNT}")) {
-            title = title.replace("{DAYCOUNT}", String.valueOf(world.getFullTime() / 24000));
+            title = title.replace("{DAYCOUNT}", String.valueOf(dayCount));
+        }
+
+        if (title.contains("{SEASON}")) {
+            title = title.replace("{SEASON}", season);
+        }
+
+        if (title.contains("{TEMP}")) {
+            title = title.replace("{TEMP}", temp + "°C");
+        }
+
+        if (title.contains("{DAYPERCENT}")) {
+            title = title.replace("{DAYPERCENT}", String.format("%.2f", progress) + "%");
         }
         return title;
     }
@@ -121,31 +132,31 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         // set the time of day depending on the time
         // dawn
         if (time >= getTime("dawn") || time < getTime("morning")) {
-            return formatTitle(worldTimeTracker.timeBar.config.getString("times.dawn"));
+            return worldTimeTracker.timeBar.config.getString("times.dawn");
         }
         // morning
         if (time >= getTime("morning") && time < getTime("noon")) {
-            return formatTitle(worldTimeTracker.timeBar.config.getString("times.morning"));
+            return worldTimeTracker.timeBar.config.getString("times.morning");
         }
         // noon
         if (time >= getTime("noon") && time < getTime("afternoon")) {
-            return formatTitle(worldTimeTracker.timeBar.config.getString("times.noon"));
+            return worldTimeTracker.timeBar.config.getString("times.noon");
         }
         // afternoon
         if (time >= getTime("afternoon") && time < getTime("sunset")) {
-            return formatTitle(worldTimeTracker.timeBar.config.getString("times.afternoon"));
+            return worldTimeTracker.timeBar.config.getString("times.afternoon");
         }
         // sunset
         if (time >= getTime("sunset") && time < getTime("night")) {
-            return formatTitle(worldTimeTracker.timeBar.config.getString("times.sunset"));
+            return worldTimeTracker.timeBar.config.getString("times.sunset");
         }
         // night
         if (time >= getTime("night") && time < getTime("midnight")) {
-            return formatTitle(worldTimeTracker.timeBar.config.getString("times.night"));
+            return worldTimeTracker.timeBar.config.getString("times.night");
         }
         // midnight
         if (time >= getTime("midnight") && time < getTime("dawn")) {
-            return formatTitle(worldTimeTracker.timeBar.config.getString("times.midnight"));
+            return worldTimeTracker.timeBar.config.getString("times.midnight");
         }
         return "INVALID";
     }

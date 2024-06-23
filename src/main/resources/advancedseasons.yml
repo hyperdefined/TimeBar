@@ -3,7 +3,8 @@
 # {DAYCOUNT} - How many total days in game have passed.
 # {SEASON} - The current season.
 # {TEMP} - The temperature of the world.
-timebar-title: "{TIME} (Day {DAYCOUNT}) {SEASON} - {TEMP}"
+# {DAYPERCENT} - Percentage of day completion.
+timebar-title: "{TIME} (Day {DAYCOUNT}) {DAYPERCENT} {SEASON} - {TEMP}"
 
 # Set the display name for seasons
 seasons:

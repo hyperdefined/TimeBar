@@ -98,11 +98,19 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         String timeString = hours + ":" + minutes;
         LocalTime currentWorldTime = LocalTime.parse(timeString);
 
-        // get the title to display for the bossbar
-        String title = parseString(world, timeString, getTimeOfDay(month, currentWorldTime), currentSeason, currentDate);
+        String timeOfDay = getTimeOfDay(month, currentWorldTime);
+        int dayCount = (int) (world.getFullTime() / 24000);
         // set the progress
         int currentSeconds = (Integer.parseInt(hours) * 3600) + (Integer.parseInt(minutes) * 60) + seconds;
         float progress = (float) (currentSeconds / 86400.0);
+        float timePercent = progress * 100;
+
+        // get the title to display for the bossbar
+        String title = parseString(world, timeString, timeOfDay, currentSeason, currentDate, timePercent);
+
+        worldTimeTracker.setTimeOfDay(timeOfDay);
+        worldTimeTracker.setDayCount(dayCount);
+        worldTimeTracker.setDayPercent(timePercent);
 
         // loop through all bossbars and format the title
         for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
@@ -233,7 +241,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
      * @param season    The current season.
      * @return Formatted title.
      */
-    private String parseString(World world, String time, String timeOfDay, Season season, Date date) {
+    private String parseString(World world, String time, String timeOfDay, Season season, Date date, float progress) {
         String title = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("timebar-title");
         if (title == null) {
             worldTimeTracker.timeBar.logger.severe("timebar-title is not set! Using default.");
@@ -284,6 +292,9 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             } else {
                 title = title.replace("{MONTH}", "INVALID");
             }
+        }
+        if (title.contains("{DAYPERCENT}")) {
+            title = title.replace("{DAYPERCENT}", String.format("%.2f", progress) + "%");
         }
         return title;
     }

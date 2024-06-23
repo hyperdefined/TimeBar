@@ -9,7 +9,8 @@ use-24h-format: false
 # {DATE} - The current date.
 # {DAY} - The day of week.
 # {MONTH} - The month.
-timebar-title: "{TIME} - {TIME-WORD} ({DATE}) {DAY} - {SEASON} - {MONTH}"
+# {DAYPERCENT} - Percentage of day completion.
+timebar-title: "{TIME} - {TIME-WORD} ({DATE}) {DAY} {DAYPERCENT} - {SEASON} - {MONTH}"
 
 # Change the default formatting for dates.
 # See: https://www.digitalocean.com/community/tutorials/java-simpledateformat-java-date-format

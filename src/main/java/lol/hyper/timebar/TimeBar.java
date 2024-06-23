@@ -22,6 +22,7 @@ import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.PlayerJoinLeave;
 import lol.hyper.timebar.events.WorldChange;
+import lol.hyper.timebar.papi.TimeBarExpansion;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -71,6 +72,12 @@ public final class TimeBar extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             papiSupport = true;
             logger.info("PlaceholderAPI is detected! Enabling support.");
+            TimeBarExpansion expansion = new TimeBarExpansion(this);
+            if (expansion.register()) {
+                logger.info("Successfully registered placeholders!");
+            } else {
+                logger.warning("Unable to register placeholders!");
+            }
         }
         if (Bukkit.getPluginManager().getPlugin("RealisticSeasons") != null) {
             realisticSeasons = true;

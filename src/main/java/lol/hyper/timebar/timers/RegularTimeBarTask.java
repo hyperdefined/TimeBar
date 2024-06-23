@@ -17,8 +17,8 @@
 
 package lol.hyper.timebar.timers;
 
-import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.papi.PlaceholderUtil;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -41,9 +41,17 @@ public class RegularTimeBarTask extends BukkitRunnable {
         // get the current time
         int time = (int) world.getTime();
         float progress = (float) (time / 24000.0);
+        float timePercent = progress * 100;
+        int dayCount = (int) (world.getFullTime() / 24000);
+        String timeOfDay = getTimeOfDay(time);
 
-        // get the title
-        String title = getTimeOfDay(time);
+        // store these into the tracker
+        worldTimeTracker.setDayPercent(timePercent);
+        worldTimeTracker.setDayCount(dayCount);
+        worldTimeTracker.setTimeOfDay(timeOfDay);
+
+        // set the title
+        String title = parseTitle(timeOfDay, dayCount, timePercent);
 
         // loop through all bossbars and format the title
         for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
@@ -62,12 +70,14 @@ public class RegularTimeBarTask extends BukkitRunnable {
     }
 
     /**
-     * Parses the title, which formats any placeholders.
+     * Format the title.
      *
-     * @param time The current time string.
-     * @return Formatted title.
+     * @param timeOfDay The time of day.
+     * @param dayCount  The day count.
+     * @param progress  The day progress.
+     * @return The formatted title.
      */
-    private String parseString(String time) {
+    private String parseTitle(String timeOfDay, int dayCount, float progress) {
         String title = worldTimeTracker.timeBar.config.getString("timebar-title");
         if (title == null) {
             worldTimeTracker.timeBar.logger.severe("timebar-title is not set! Using default.");
@@ -75,11 +85,15 @@ public class RegularTimeBarTask extends BukkitRunnable {
         }
 
         if (title.contains("{TIME}")) {
-            title = title.replace("{TIME}", time);
+            title = title.replace("{TIME}", timeOfDay);
         }
 
         if (title.contains("{DAYCOUNT}")) {
-            title = title.replace("{DAYCOUNT}", String.valueOf(world.getFullTime() / 24000));
+            title = title.replace("{DAYCOUNT}", String.valueOf(dayCount));
+        }
+
+        if (title.contains("{DAYPERCENT}")) {
+            title = title.replace("{DAYPERCENT}", String.format("%.2f", progress) + "%");
         }
         return title;
     }
@@ -103,31 +117,31 @@ public class RegularTimeBarTask extends BukkitRunnable {
         // set the time of day depending on the time
         // dawn
         if (time >= getTime("dawn") || time < getTime("morning")) {
-            return parseString(worldTimeTracker.timeBar.config.getString("times.dawn"));
+            return worldTimeTracker.timeBar.config.getString("times.dawn");
         }
         // morning
         if (time >= getTime("morning") && time < getTime("noon")) {
-            return parseString(worldTimeTracker.timeBar.config.getString("times.morning"));
+            return worldTimeTracker.timeBar.config.getString("times.morning");
         }
         // noon
         if (time >= getTime("noon") && time < getTime("afternoon")) {
-            return parseString(worldTimeTracker.timeBar.config.getString("times.noon"));
+            return worldTimeTracker.timeBar.config.getString("times.noon");
         }
         // afternoon
         if (time >= getTime("afternoon") && time < getTime("sunset")) {
-            return parseString(worldTimeTracker.timeBar.config.getString("times.afternoon"));
+            return worldTimeTracker.timeBar.config.getString("times.afternoon");
         }
         // sunset
         if (time >= getTime("sunset") && time < getTime("night")) {
-            return parseString(worldTimeTracker.timeBar.config.getString("times.sunset"));
+            return worldTimeTracker.timeBar.config.getString("times.sunset");
         }
         // night
         if (time >= getTime("night") && time < getTime("midnight")) {
-            return parseString(worldTimeTracker.timeBar.config.getString("times.night"));
+            return worldTimeTracker.timeBar.config.getString("times.night");
         }
         // midnight
         if (time >= getTime("midnight") && time < getTime("dawn")) {
-            return parseString(worldTimeTracker.timeBar.config.getString("times.midnight"));
+            return worldTimeTracker.timeBar.config.getString("times.midnight");
         }
         return "INVALID";
     }
