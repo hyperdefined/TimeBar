@@ -19,6 +19,7 @@ package lol.hyper.timebar.timers;
 
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.papi.PlaceholderUtil;
+import lol.hyper.timebar.utils.NumberFormat;
 import me.casperge.realisticseasons.api.SeasonsAPI;
 import me.casperge.realisticseasons.calendar.Date;
 import me.casperge.realisticseasons.season.Season;
@@ -34,6 +35,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class RealisticSeasonsTask extends BukkitRunnable {
 
@@ -263,7 +265,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         }
 
         if (title.contains("{DAYCOUNT}")) {
-            title = title.replace("{DAYCOUNT}", String.valueOf(world.getFullTime() / 24000));
+            title = title.replace("{DAYCOUNT}", NumberFormat.formatInt((int) (world.getFullTime() / 24000)));
         }
 
         if (title.contains("{SEASON}")) {
@@ -287,11 +289,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             String configMonth = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("month." + writtenMonth.toLowerCase(Locale.ROOT) + ".name");
             if (writtenMonth.equals("DISABLED")) {
                 title = title.replace("{MONTH}", "DISABLED");
-            } else if (configMonth != null) {
-                title = title.replace("{MONTH}", configMonth);
-            } else {
-                title = title.replace("{MONTH}", "INVALID");
-            }
+            } else title = title.replace("{MONTH}", Objects.requireNonNullElse(configMonth, "INVALID"));
         }
         if (title.contains("{DAYPERCENT}")) {
             title = title.replace("{DAYPERCENT}", String.format("%.2f", progress) + "%");

@@ -21,6 +21,7 @@ import lol.hyper.timebar.TimeBar;
 import lol.hyper.timebar.timers.AdvancedSeasonsTask;
 import lol.hyper.timebar.timers.RealisticSeasonsTask;
 import lol.hyper.timebar.timers.RegularTimeBarTask;
+import lol.hyper.timebar.utils.NumberFormat;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.World;
@@ -190,7 +191,7 @@ public class WorldTimeTracker {
     }
 
     public String getDayCount() {
-        return String.valueOf(dayCount);
+        return NumberFormat.formatInt(dayCount);
     }
 
     public String getTimeOfDay() {

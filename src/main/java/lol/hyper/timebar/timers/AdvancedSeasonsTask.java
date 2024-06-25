@@ -19,6 +19,7 @@ package lol.hyper.timebar.timers;
 
 import lol.hyper.timebar.papi.PlaceholderUtil;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
+import lol.hyper.timebar.utils.NumberFormat;
 import net.advancedplugins.seasons.api.AdvancedSeasonsAPI;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.World;
@@ -96,7 +97,7 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         }
 
         if (title.contains("{DAYCOUNT}")) {
-            title = title.replace("{DAYCOUNT}", String.valueOf(dayCount));
+            title = title.replace("{DAYCOUNT}", NumberFormat.formatInt(dayCount));
         }
 
         if (title.contains("{SEASON}")) {
