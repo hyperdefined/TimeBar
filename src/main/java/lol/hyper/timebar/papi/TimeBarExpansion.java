@@ -56,6 +56,11 @@ public class TimeBarExpansion extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String params) {
+        // ignore null players
+        if (player == null) {
+            return null;
+        }
+        // find their world tracker
         World world = player.getWorld();
         WorldTimeTracker playerWorldTracker = null;
         for (WorldTimeTracker tracker : timeBar.worldTimeTrackers) {
@@ -67,7 +72,7 @@ public class TimeBarExpansion extends PlaceholderExpansion {
             return null;
         }
 
-        //params being the placeholder, like timebar_day
+        // params being the placeholder, like timebar_day
         switch (params.toLowerCase(Locale.ROOT)) {
             case "daycount" -> {
                 return playerWorldTracker.getDayCount();
