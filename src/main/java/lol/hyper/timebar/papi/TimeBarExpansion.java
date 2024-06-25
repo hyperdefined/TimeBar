@@ -62,12 +62,7 @@ public class TimeBarExpansion extends PlaceholderExpansion {
         }
         // find their world tracker
         World world = player.getWorld();
-        WorldTimeTracker playerWorldTracker = null;
-        for (WorldTimeTracker tracker : timeBar.worldTimeTrackers) {
-            if (tracker.getMainWorld() == world) {
-                playerWorldTracker = tracker;
-            }
-        }
+        WorldTimeTracker playerWorldTracker = timeBar.worldTimeTrackers.stream().filter(tracker -> tracker.getMainWorld() == world).findFirst().orElse(null);
         if (playerWorldTracker == null) {
             return null;
         }
