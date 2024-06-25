@@ -105,10 +105,7 @@ public class WorldTimeTracker {
      * This also will update bossbars for any players on this tracker.
      */
     public void startTimer() {
-        if (timeBarTask != null) {
-            timeBarTask.cancel();
-            timeBar.logger.info("Stopping current TimeBar task for '" + mainWorld.getName() + "'");
-        }
+        // start the tracker
         int updateFrequency = timeBar.config.getInt("bar-update-frequency");
         String allWorldNames = worldGroup.stream().map(World::getName).collect(Collectors.joining(", "));
         if (timeBar.realisticSeasons) {
@@ -124,6 +121,16 @@ public class WorldTimeTracker {
             timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'");
             timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
         }
+    }
+
+    public void stopTimer() {
+        // stop the tracker
+        timeBarTask.cancel();
+        timeBar.logger.info("Stopping current TimeBar task for '" + mainWorld.getName() + "'");
+    }
+
+    public boolean isRunning() {
+        return !timeBarTask.isCancelled();
     }
 
     /**

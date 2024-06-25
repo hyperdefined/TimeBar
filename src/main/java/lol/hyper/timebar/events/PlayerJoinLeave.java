@@ -43,6 +43,10 @@ public class PlayerJoinLeave implements Listener {
         timeBar.enabledBossBar.add(player);
         // if the world has a tracker, add them
         if (tracker != null) {
+            // if the tracker is not running, start it
+            if (!tracker.isRunning()) {
+                tracker.startTimer();
+            }
             tracker.addPlayer(player);
         }
     }
@@ -57,6 +61,11 @@ public class PlayerJoinLeave implements Listener {
         if (tracker != null) {
             tracker.removePlayer(player);
             timeBar.enabledBossBar.remove(player);
+
+            // there are no players in the world group anymore, stop the task
+            if (tracker.getBossBars().isEmpty()) {
+                tracker.stopTimer();
+            }
         }
     }
 }

@@ -57,12 +57,13 @@ public class CommandTimeBar implements TabExecutor {
         }
 
         switch (args[0]) {
-            case "reload": {
+            case "reload" -> {
                 if (sender.hasPermission("timebar.reload")) {
                     // this is a bit ugly, but it should be done in this order
                     // hide the bossbars, reload config, then start them again
                     for (WorldTimeTracker worldTimeTracker : timeBar.worldTimeTrackers) {
                         worldTimeTracker.hideBossBars();
+                        worldTimeTracker.stopTimer();
                     }
                     timeBar.worldTimeTrackers.clear();
                     timeBar.loadConfig();
@@ -79,7 +80,7 @@ public class CommandTimeBar implements TabExecutor {
                 }
                 return true;
             }
-            case "on": {
+            case "on" -> {
                 if (sender instanceof ConsoleCommandSender) {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
@@ -102,7 +103,7 @@ public class CommandTimeBar implements TabExecutor {
                 audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
                 return true;
             }
-            case "off": {
+            case "off" -> {
                 if (sender instanceof ConsoleCommandSender) {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
@@ -125,7 +126,7 @@ public class CommandTimeBar implements TabExecutor {
                 audiences.player(player).sendMessage(Component.text("TimeBar is now disabled.").color(NamedTextColor.GREEN));
                 return true;
             }
-            default: {
+            default -> {
                 audiences.sender(sender).sendMessage(Component.text("Invalid sub-command. Valid options are: reload, on, off.").color(NamedTextColor.RED));
             }
         }
