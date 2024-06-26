@@ -47,12 +47,12 @@ public class CommandTimeBar implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
-            audiences.sender(sender).sendMessage(Component.text("TimeBar version " + timeBar.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
+            audiences.sender(sender).sendMessage(Component.text("TimeBar version " + timeBar.getDescription().getVersion() + ". Created by hyperdefined.", NamedTextColor.GREEN));
             return true;
         }
 
         if (!sender.hasPermission("timebar.command")) {
-            audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+            audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
             return true;
         }
 
@@ -74,19 +74,23 @@ public class CommandTimeBar implements TabExecutor {
                     for (WorldTimeTracker worldTimeTracker : timeBar.worldTimeTrackers) {
                         worldTimeTracker.startTimer();
                     }
-                    audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!").color(NamedTextColor.GREEN));
+                    audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!", NamedTextColor.GREEN));
                 } else {
-                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                 }
                 return true;
             }
             case "on" -> {
                 if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
                     return true;
                 }
                 if (!sender.hasPermission("timebar.enable")) {
-                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (timeBar.config.getBoolean("hold-clock-to-show")) {
+                    audiences.sender(sender).sendMessage(Component.text("You must be holding a clock to show/hide the TimeBar.", NamedTextColor.RED));
                     return true;
                 }
                 Player player = (Player) sender;
@@ -100,16 +104,20 @@ public class CommandTimeBar implements TabExecutor {
                 } else {
                     timeBar.enabledBossBar.add(player);
                 }
-                audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.").color(NamedTextColor.GREEN));
+                audiences.player(player).sendMessage(Component.text("TimeBar is now enabled.", NamedTextColor.GREEN));
                 return true;
             }
             case "off" -> {
                 if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
                     return true;
                 }
                 if (!sender.hasPermission("timebar.disable")) {
-                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (timeBar.config.getBoolean("hold-clock-to-show")) {
+                    audiences.sender(sender).sendMessage(Component.text("You must be holding a clock to show/hide the TimeBar.", NamedTextColor.RED));
                     return true;
                 }
                 Player player = (Player) sender;
@@ -123,12 +131,10 @@ public class CommandTimeBar implements TabExecutor {
                 } else {
                     timeBar.enabledBossBar.remove(player);
                 }
-                audiences.player(player).sendMessage(Component.text("TimeBar is now disabled.").color(NamedTextColor.GREEN));
+                audiences.player(player).sendMessage(Component.text("TimeBar is now disabled.", NamedTextColor.GREEN));
                 return true;
             }
-            default -> {
-                audiences.sender(sender).sendMessage(Component.text("Invalid sub-command. Valid options are: reload, on, off.").color(NamedTextColor.RED));
-            }
+            default -> audiences.sender(sender).sendMessage(Component.text("Invalid sub-command. Valid options are: reload, on, off.", NamedTextColor.RED));
         }
         return true;
     }

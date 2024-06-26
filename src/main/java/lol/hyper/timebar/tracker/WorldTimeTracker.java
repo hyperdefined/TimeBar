@@ -24,6 +24,7 @@ import lol.hyper.timebar.timers.RegularTimeBarTask;
 import lol.hyper.timebar.utils.NumberFormat;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -156,7 +157,9 @@ public class WorldTimeTracker {
     public void hidePlayer(Player player) {
         BossBar bossBar = bossBars.get(player);
         timeBar.getAdventure().player(player).hideBossBar(bossBar);
-        timeBar.enabledBossBar.remove(player);
+        if (!timeBar.config.getBoolean("hold-clock-to-show")) {
+            timeBar.enabledBossBar.remove(player);
+        }
     }
 
     /**
@@ -171,7 +174,9 @@ public class WorldTimeTracker {
             BossBar bossBar = bossBars.get(player);
             timeBar.getAdventure().player(player).showBossBar(bossBar);
         }
-        timeBar.enabledBossBar.add(player);
+        if (!timeBar.config.getBoolean("hold-clock-to-show")) {
+            timeBar.enabledBossBar.add(player);
+        }
     }
 
     public void setDayCount(int dayCount) {

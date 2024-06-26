@@ -22,6 +22,9 @@ import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.utils.NumberFormat;
 import net.advancedplugins.seasons.api.AdvancedSeasonsAPI;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -72,6 +75,15 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
             }
             bossBar.progress(progress);
             bossBar.color(worldTimeTracker.timeBar.bossBarColor);
+
+            // if the player is holding a clock
+            if (worldTimeTracker.timeBar.config.getBoolean("hold-clock-to-show")) {
+                if (player.getInventory().getItemInMainHand().getType() == Material.CLOCK) {
+                    worldTimeTracker.showPlayer(player);
+                } else {
+                    worldTimeTracker.hidePlayer(player);
+                }
+            }
         }
     }
 

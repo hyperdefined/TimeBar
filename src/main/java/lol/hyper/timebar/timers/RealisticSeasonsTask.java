@@ -24,6 +24,7 @@ import me.casperge.realisticseasons.api.SeasonsAPI;
 import me.casperge.realisticseasons.calendar.Date;
 import me.casperge.realisticseasons.season.Season;
 import net.kyori.adventure.bossbar.BossBar;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -127,6 +128,15 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             }
             bossBar.progress(progress);
             bossBar.color(worldTimeTracker.timeBar.bossBarColor);
+
+            // if the player is holding a clock
+            if (worldTimeTracker.timeBar.config.getBoolean("hold-clock-to-show")) {
+                if (player.getInventory().getItemInMainHand().getType() == Material.CLOCK) {
+                    worldTimeTracker.showPlayer(player);
+                } else {
+                    worldTimeTracker.hidePlayer(player);
+                }
+            }
         }
     }
 

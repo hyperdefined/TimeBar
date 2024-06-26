@@ -21,6 +21,7 @@ import lol.hyper.timebar.papi.PlaceholderUtil;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.utils.NumberFormat;
 import net.kyori.adventure.bossbar.BossBar;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -67,6 +68,15 @@ public class RegularTimeBarTask extends BukkitRunnable {
             }
             bossBar.progress(progress);
             bossBar.color(worldTimeTracker.timeBar.bossBarColor);
+
+            // if the player is holding a clock
+            if (worldTimeTracker.timeBar.config.getBoolean("hold-clock-to-show")) {
+                if (player.getInventory().getItemInMainHand().getType() == Material.CLOCK) {
+                    worldTimeTracker.showPlayer(player);
+                } else {
+                    worldTimeTracker.hidePlayer(player);
+                }
+            }
         }
     }
 

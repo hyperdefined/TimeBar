@@ -40,7 +40,10 @@ public class PlayerJoinLeave implements Listener {
 
         // add player to tracker
         WorldTimeTracker tracker = timeBar.getPlayerTracker(player);
-        timeBar.enabledBossBar.add(player);
+        // if we only want to display when a clock is being held
+        if (!timeBar.config.getBoolean("hold-clock-to-show")) {
+            timeBar.enabledBossBar.add(player);
+        }
         // if the world has a tracker, add them
         if (tracker != null) {
             // if the tracker is not running, start it

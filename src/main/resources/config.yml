@@ -27,6 +27,10 @@ timebar-title: "{TIME} (Day {DAYCOUNT}) {DAYPERCENT}"
 # This is in game ticks, 20 ticks = 1 second.
 bar-update-frequency: 20
 
+# Set if you want the player to hold a clock in order to see the TimeBar.
+# This is more vanilla style.
+hold-clock-to-show: false
+
 # Want to change the wording of the times?
 times:
   dawn: "Dawn"
