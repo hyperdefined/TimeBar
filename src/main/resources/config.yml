@@ -54,4 +54,4 @@ times-of-day:
   midnight: 18000
 
 # No touch please :)
-config-version: 4
+config-version: 5

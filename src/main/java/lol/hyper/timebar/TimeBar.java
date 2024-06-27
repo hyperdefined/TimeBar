@@ -112,7 +112,7 @@ public final class TimeBar extends JavaPlugin {
             this.saveResource("config.yml", true);
         }
         config = YamlConfiguration.loadConfiguration(configFile);
-        int CONFIG_VERSION = 4;
+        int CONFIG_VERSION = 5;
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("You configuration is out of date! Some features may not work!");
             // don't feel like adding a config updater
