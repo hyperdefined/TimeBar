@@ -117,12 +117,16 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         worldTimeTracker.setDayPercent(timePercent);
 
         String colorConfig = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("colors." + currentSeason.toString().toUpperCase(Locale.ROOT));
-        BossBar.Color color;
-        try {
-            color = BossBar.Color.valueOf(colorConfig);
-        } catch (IllegalArgumentException exception) {
-            worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
-            color = worldTimeTracker.timeBar.bossBarColor;
+        // load from config first
+        BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;;
+        if (colorConfig != null) {
+            // see if the color is valid
+            try {
+                color = BossBar.Color.valueOf(colorConfig);
+            } catch (IllegalArgumentException exception) {
+                // if the color is not valid, fall back
+                worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
+            }
         }
 
         // loop through all bossbars and format the title

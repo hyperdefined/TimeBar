@@ -27,6 +27,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class AdvancedSeasonsTask extends BukkitRunnable {
@@ -48,6 +49,11 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         float timePercent = progress * 100;
         int dayCount = (int) (world.getFullTime() / 24000);
         String timeOfDay = getTimeOfDay(time);
+        String season = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("seasons." + api.getSeason(world));
+        if (season == null) {
+            worldTimeTracker.timeBar.logger.warning(world.getName() + " does not have a season set! Cannot show time.");
+            return;
+        }
 
         // store these into the tracker
         worldTimeTracker.setDayPercent(timePercent);
@@ -55,13 +61,17 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         worldTimeTracker.setTimeOfDay(timeOfDay);
 
         // get the color for the season
-        String colorConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("colors." + api.getSeason(world));
-        BossBar.Color color;
-        try {
-            color = BossBar.Color.valueOf(colorConfig);
-        } catch (IllegalArgumentException exception) {
-            worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
-            color = worldTimeTracker.timeBar.bossBarColor;
+        String colorConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("colors." + season.toUpperCase(Locale.ROOT));
+        // load from config first
+        BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;;
+        if (colorConfig != null) {
+            // see if the color is valid
+            try {
+                color = BossBar.Color.valueOf(colorConfig);
+            } catch (IllegalArgumentException exception) {
+                // if the color is not valid, fall back
+                worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
+            }
         }
 
         // loop through all bossbars and format the title
@@ -69,7 +79,6 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
             Player player = entry.getKey();
             BossBar bossBar = entry.getValue();
             int temp = api.getTemperature(player);
-            String season = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("seasons." + api.getSeason(world));
 
             // format the title
             String title = parseTitle(timeOfDay, dayCount, season, temp, timePercent);
