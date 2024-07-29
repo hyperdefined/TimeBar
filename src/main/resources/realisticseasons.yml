@@ -38,6 +38,7 @@ colors:
 # Set each "time of day" for each month.
 # When the time hits one of these, it will turn that "time of day."
 # Example: January at 7:45 AM. It will be dawn.
+# You can also set each title for each month, just add the title section like below and remove the #
 month:
   january:
     name: "January"
@@ -48,6 +49,7 @@ month:
     sunset: "16:30"
     night: "18:30"
     midnight: "00:00"
+    #title: "This title will show in January only."
   february:
     name: "February"
     dawn: "05:25"
@@ -57,6 +59,7 @@ month:
     sunset: "17:00"
     night: "18:50"
     midnight: "00:00"
+    #title: "This title will show in February only."
   march:
     name: "March"
     dawn: "05:00"
@@ -149,4 +152,4 @@ month:
     midnight: "00:00"
 
 # No touch please :)
-config-version: 3
+config-version: 4

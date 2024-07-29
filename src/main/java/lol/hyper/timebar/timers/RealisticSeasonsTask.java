@@ -268,7 +268,16 @@ public class RealisticSeasonsTask extends BukkitRunnable {
      * @return Formatted title.
      */
     private String parseString(World world, String time, String timeOfDay, Season season, Date date, float progress) {
-        String title = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("timebar-title");
+        LocalDate convertedDate = LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
+        String title;
+        // if this month has a custom title, use it instead
+        String monthTitle = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("month." + convertedDate.getMonth().toString().toLowerCase(Locale.ROOT) + ".title");
+        if (monthTitle != null) {
+            title = monthTitle;
+        } else {
+            // if there is no custom title for the month, use the default
+            title = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("timebar-title");
+        }
         if (title == null) {
             worldTimeTracker.timeBar.logger.severe("timebar-title is not set! Using default.");
             title = "{TIME} - {TIME-WORD} ({DATE}) - {SEASON}";
@@ -295,7 +304,6 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         if (title.contains("{SEASON}")) {
             title = title.replace("{SEASON}", season.toString());
         }
-        LocalDate convertedDate = LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
         if (title.contains("{DATE}")) {
             String newDate = convertedDate.format(dateFormatter);
             title = title.replace("{DATE}", newDate);

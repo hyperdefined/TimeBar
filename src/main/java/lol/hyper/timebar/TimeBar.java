@@ -174,7 +174,7 @@ public final class TimeBar extends JavaPlugin {
                 this.saveResource("realisticseasons.yml", true);
             }
             realisticSeasonsConfig = YamlConfiguration.loadConfiguration(realisticSeasonsConfigFile);
-            int REALISTIC_SEASONS_CONFIG_VERSION = 3;
+            int REALISTIC_SEASONS_CONFIG_VERSION = 4;
             if (realisticSeasonsConfig.getInt("config-version") != REALISTIC_SEASONS_CONFIG_VERSION) {
                 logger.warning("Your /plugins/TimeBar/realisticseasons.yml configuration is out of date! Some features may not work!");
             }
