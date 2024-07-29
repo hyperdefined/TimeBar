@@ -22,8 +22,6 @@ import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.utils.NumberFormat;
 import net.advancedplugins.seasons.api.AdvancedSeasonsAPI;
 import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -56,6 +54,16 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         worldTimeTracker.setDayCount(dayCount);
         worldTimeTracker.setTimeOfDay(timeOfDay);
 
+        // get the color for the season
+        String colorConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("colors." + api.getSeason(world));
+        BossBar.Color color;
+        try {
+            color = BossBar.Color.valueOf(colorConfig);
+        } catch (IllegalArgumentException exception) {
+            worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
+            color = worldTimeTracker.timeBar.bossBarColor;
+        }
+
         // loop through all bossbars and format the title
         for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
             Player player = entry.getKey();
@@ -74,7 +82,7 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
                 bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(title));
             }
             bossBar.progress(progress);
-            bossBar.color(worldTimeTracker.timeBar.bossBarColor);
+            bossBar.color(color);
 
             // if the player is holding a clock
             if (worldTimeTracker.timeBar.config.getBoolean("hold-clock-to-show")) {

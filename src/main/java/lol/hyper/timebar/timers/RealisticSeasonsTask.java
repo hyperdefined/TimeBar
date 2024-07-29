@@ -111,9 +111,19 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         // get the title to display for the bossbar
         String title = parseString(world, timeString, timeOfDay, currentSeason, currentDate, timePercent);
 
+        // store these into the tracker
         worldTimeTracker.setTimeOfDay(timeOfDay);
         worldTimeTracker.setDayCount(dayCount);
         worldTimeTracker.setDayPercent(timePercent);
+
+        String colorConfig = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("colors." + currentSeason.toString().toUpperCase(Locale.ROOT));
+        BossBar.Color color;
+        try {
+            color = BossBar.Color.valueOf(colorConfig);
+        } catch (IllegalArgumentException exception) {
+            worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
+            color = worldTimeTracker.timeBar.bossBarColor;
+        }
 
         // loop through all bossbars and format the title
         for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
@@ -127,7 +137,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
                 bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(title));
             }
             bossBar.progress(progress);
-            bossBar.color(worldTimeTracker.timeBar.bossBarColor);
+            bossBar.color(color);
 
             // if the player is holding a clock
             if (worldTimeTracker.timeBar.config.getBoolean("hold-clock-to-show")) {

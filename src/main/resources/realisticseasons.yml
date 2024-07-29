@@ -27,6 +27,14 @@ times:
   night: "Night"
   midnight: "Midnight"
 
+# Set the color per season for the TimeBar.
+# The valid options are: blue, green, pink, purple, red, white, and yellow.
+colors:
+  SPRING: "PINK"
+  SUMMER: "YELLOW"
+  FALL: "RED"
+  WINTER: "BLUE"
+
 # Set each "time of day" for each month.
 # When the time hits one of these, it will turn that "time of day."
 # Example: January at 7:45 AM. It will be dawn.

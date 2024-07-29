@@ -6,12 +6,20 @@
 # {DAYPERCENT} - Percentage of day completion.
 timebar-title: "{TIME} (Day {DAYCOUNT}) {DAYPERCENT} {SEASON} - {TEMP}"
 
-# Set the display name for seasons
+# Set the display name for seasons.
 seasons:
   SPRING: "Spring"
   SUMMER: "Summer"
   FALL: "Fall"
   WINTER: "Winter"
+
+# Set the color per season for the TimeBar.
+# The valid options are: blue, green, pink, purple, red, white, and yellow.
+colors:
+  SPRING: "PINK"
+  SUMMER: "YELLOW"
+  FALL: "RED"
+  WINTER: "BLUE"
 
 # No touch please :)
 config-version: 1
