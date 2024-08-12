@@ -70,6 +70,13 @@ public class RealisticSeasonsTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        if (this.seasonsAPI == null) {
+            worldTimeTracker.timeBar.logger.severe("Unable to hook into RealisticSeason!");
+            worldTimeTracker.timeBar.logger.severe("Canceling RealisticSeasonsTask, please try /timebar reload.");
+            worldTimeTracker.timeBar.logger.severe("If you keep seeing this message, please file an issue on GitHub!");
+            this.cancel();
+            return;
+        }
         // get the current season & date of the world
         Season currentSeason = this.seasonsAPI.getSeason(world);
         Date currentDate = this.seasonsAPI.getDate(world);

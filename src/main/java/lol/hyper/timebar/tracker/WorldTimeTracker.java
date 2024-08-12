@@ -111,11 +111,11 @@ public class WorldTimeTracker {
         int updateFrequency = timeBar.config.getInt("bar-update-frequency");
         String allWorldNames = worldGroup.stream().map(World::getName).collect(Collectors.joining(", "));
         if (timeBar.realisticSeasons) {
-            timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(timeBar, 0, updateFrequency);
+            timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(timeBar, 200, updateFrequency);
             timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'" + " (RealisticSeasons support)");
             timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
         } else if (timeBar.advancedSeasons) {
-            timeBarTask = new AdvancedSeasonsTask(this).runTaskTimer(timeBar, 0, updateFrequency);
+            timeBarTask = new AdvancedSeasonsTask(this).runTaskTimer(timeBar, 200, updateFrequency);
             timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'" + " (AdvancedSeasons support)");
             timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
         } else {

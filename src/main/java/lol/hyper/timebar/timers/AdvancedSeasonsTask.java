@@ -33,16 +33,25 @@ import java.util.Map;
 public class AdvancedSeasonsTask extends BukkitRunnable {
 
     private final WorldTimeTracker worldTimeTracker;
-    private final AdvancedSeasonsAPI api = new AdvancedSeasonsAPI();
+    private final AdvancedSeasonsAPI api;
     private final World world;
 
     public AdvancedSeasonsTask(WorldTimeTracker worldTimeTracker) {
         this.worldTimeTracker = worldTimeTracker;
         this.world = worldTimeTracker.getMainWorld();
+        this.api = new AdvancedSeasonsAPI();
     }
 
     @Override
     public void run() {
+        if (api == null) {
+            worldTimeTracker.timeBar.logger.severe("Unable to hook into AdvancedSeasonsAPI!");
+            worldTimeTracker.timeBar.logger.severe("Canceling AdvancedSeasonsTask, please try /timebar reload.");
+            worldTimeTracker.timeBar.logger.severe("If you keep seeing this issue, please file an issue on GitHub!");
+            this.cancel();
+            return;
+        }
+
         // get the current time
         int time = (int) world.getTime();
         float progress = (float) (time / 24000.0);
