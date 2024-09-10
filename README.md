@@ -27,5 +27,8 @@ TimeBar lets you visualize the current world time as a bossbar. See the time of 
 ## Documentation
 Visit the [wiki](https://github.com/hyperdefined/TimeBar/wiki) for help.
 
+## Support
+You can join the [Discord](https://discord.gg/rJuQXVcJz8) for support.
+
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/TimeBar/blob/master/LICENSE).
