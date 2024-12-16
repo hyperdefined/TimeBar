@@ -44,11 +44,16 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        // if there are no players, do not run
+        if (worldTimeTracker.getBossBars().isEmpty()) {
+            worldTimeTracker.stopTimer();
+            return;
+        }
         if (api == null) {
             worldTimeTracker.timeBar.logger.severe("Unable to hook into AdvancedSeasonsAPI!");
             worldTimeTracker.timeBar.logger.severe("Canceling AdvancedSeasonsTask, please try /timebar reload.");
             worldTimeTracker.timeBar.logger.severe("If you keep seeing this issue, please file an issue on GitHub!");
-            this.cancel();
+            worldTimeTracker.stopTimer();
             return;
         }
 
@@ -58,10 +63,17 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         float timePercent = progress * 100;
         int dayCount = (int) (world.getFullTime() / 24000);
         String timeOfDay = getTimeOfDay(time);
-        String season = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("seasons." + api.getSeason(world));
-        if (season == null) {
-            worldTimeTracker.timeBar.logger.warning(world.getName() + " does not have a season set! Cannot show time.");
+        String currentSeason = api.getSeason(world);
+        if (currentSeason == null) {
+            worldTimeTracker.timeBar.logger.severe("Unable to read season information from world " + world.getName());
+            worldTimeTracker.timeBar.logger.severe("This world is not setup with AdvancedSeasons, canceling...");
+            this.cancel();
             return;
+        }
+        String seasonFromConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("seasons." + currentSeason);
+        if (seasonFromConfig == null) {
+            worldTimeTracker.timeBar.logger.warning("seasons." + currentSeason + " does not exist in advancedseasons.yml, using default season names...");
+            seasonFromConfig = currentSeason;
         }
 
         // store these into the tracker
@@ -70,7 +82,7 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         worldTimeTracker.setTimeOfDay(timeOfDay);
 
         // get the color for the season
-        String colorConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("colors." + season.toUpperCase(Locale.ROOT));
+        String colorConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("colors." + currentSeason.toUpperCase(Locale.ROOT));
         // load from config first
         BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;;
         if (colorConfig != null) {
@@ -90,7 +102,7 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
             int temp = api.getTemperature(player);
 
             // format the title
-            String title = parseTitle(timeOfDay, dayCount, season, temp, timePercent);
+            String title = parseTitle(timeOfDay, dayCount, seasonFromConfig, temp, timePercent);
 
             // format if PAPI is detected
             if (worldTimeTracker.timeBar.papiSupport) {

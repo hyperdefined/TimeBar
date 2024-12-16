@@ -131,7 +131,7 @@ public class WorldTimeTracker {
         timeBar.logger.info("Stopping current TimeBar task for '" + mainWorld.getName() + "'");
     }
 
-    public boolean isRunning() {
+    public boolean running() {
         return !timeBarTask.isCancelled();
     }
 

@@ -46,11 +46,11 @@ public class PlayerJoinLeave implements Listener {
         }
         // if the world has a tracker, add them
         if (tracker != null) {
+            tracker.addPlayer(player);
             // if the tracker is not running, start it
-            if (!tracker.isRunning()) {
+            if (!tracker.running()) {
                 tracker.startTimer();
             }
-            tracker.addPlayer(player);
         }
     }
 

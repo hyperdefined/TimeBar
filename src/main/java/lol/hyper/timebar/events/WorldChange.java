@@ -44,14 +44,22 @@ public class WorldChange implements Listener {
         WorldTimeTracker oldTracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(oldWorld)).findFirst().orElse(null);
         // get tracker for new location
         WorldTimeTracker newTracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(newWorld)).findFirst().orElse(null);
+        // if the old world had a tracker
         if (oldTracker != null) {
             // if they moved to a new tracker group
             if (!oldTracker.worldGroup().contains(newWorld)) {
                 oldTracker.removePlayer(player);
                 // if the new world has a tracker, add them
                 if (newTracker != null) {
-                    // perform the swap
                     newTracker.addPlayer(player);
+                    // perform the swap
+                    if (!newTracker.running()) {
+                        newTracker.startTimer();
+                    }
+                }
+                // if we moved and the old world has no players, stop tracking
+                if (oldTracker.getBossBars().isEmpty()) {
+                    oldTracker.stopTimer();
                 }
             }
         } else {
@@ -59,6 +67,10 @@ public class WorldChange implements Listener {
             // if the new world has a tracker, add them
             if (newTracker != null) {
                 newTracker.addPlayer(player);
+                // if the world they move to is not tracking, start it
+                if (!newTracker.running()) {
+                    newTracker.startTimer();
+                }
             }
         }
     }
