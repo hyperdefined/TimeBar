@@ -41,12 +41,12 @@ public class TimeBarExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return String.join(", ", timeBar.getDescription().getAuthors());
+        return String.join(", ", timeBar.getPluginMeta().getAuthors());
     }
 
     @Override
     public @NotNull String getVersion() {
-        return timeBar.getDescription().getVersion();
+        return timeBar.getPluginMeta().getVersion();
     }
 
     @Override

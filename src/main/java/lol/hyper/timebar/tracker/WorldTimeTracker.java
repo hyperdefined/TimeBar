@@ -24,7 +24,6 @@ import lol.hyper.timebar.timers.RegularTimeBarTask;
 import lol.hyper.timebar.utils.NumberFormat;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -86,7 +85,7 @@ public class WorldTimeTracker {
         if (worldGroup.contains(player.getWorld())) {
             // if they have it enabled
             if (timeBar.enabledBossBar.contains(player)) {
-                timeBar.getAdventure().player(player).showBossBar(bossBar);
+                player.showBossBar(bossBar);
             }
         }
     }
@@ -98,7 +97,7 @@ public class WorldTimeTracker {
      */
     public void removePlayer(Player player) {
         BossBar bossBar = bossBars.get(player);
-        timeBar.getAdventure().player(player).hideBossBar(bossBar);
+        player.hideBossBar(bossBar);
         bossBars.remove(player);
     }
 
@@ -145,7 +144,7 @@ public class WorldTimeTracker {
                 continue;
             }
             BossBar bossBar = entry.getValue();
-            timeBar.getAdventure().player(player).hideBossBar(bossBar);
+            player.hideBossBar(bossBar);
         }
     }
 
@@ -156,7 +155,7 @@ public class WorldTimeTracker {
      */
     public void hidePlayer(Player player) {
         BossBar bossBar = bossBars.get(player);
-        timeBar.getAdventure().player(player).hideBossBar(bossBar);
+        player.hideBossBar(bossBar);
         if (!timeBar.config.getBoolean("hold-clock-to-show")) {
             timeBar.enabledBossBar.remove(player);
         }
@@ -172,7 +171,7 @@ public class WorldTimeTracker {
         // they are in a display world, show them timebar
         if (worldGroup.contains(player.getWorld())) {
             BossBar bossBar = bossBars.get(player);
-            timeBar.getAdventure().player(player).showBossBar(bossBar);
+            player.showBossBar(bossBar);
         }
         if (!timeBar.config.getBoolean("hold-clock-to-show")) {
             timeBar.enabledBossBar.add(player);

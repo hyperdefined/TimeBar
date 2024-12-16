@@ -1,9 +1,9 @@
 name: TimeBar
 version: ${project.version}
 main: lol.hyper.timebar.TimeBar
-api-version: 1.19
+api-version: 1.21
 author: hyperdefined
-website: https://www.spigotmc.org/resources/timebar.90179/
+website: https://github.com/hyperdefined/TimeBar
 description: See the world's time as a bossbar.
 softdepend: [Multiverse-Core, RealisticSeasons, AdvancedSeasons, PlaceholderAPI]
 load: POSTWORLD

@@ -25,7 +25,6 @@ import lol.hyper.timebar.events.WorldChange;
 import lol.hyper.timebar.papi.TimeBarExpansion;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -54,7 +53,6 @@ public final class TimeBar extends JavaPlugin {
     public final List<WorldTimeTracker> worldTimeTrackers = new ArrayList<>();
 
     public final MiniMessage miniMessage = MiniMessage.miniMessage();
-    private BukkitAudiences adventure;
 
     public PlayerJoinLeave playerJoinLeave;
     public WorldChange worldChange;
@@ -67,8 +65,6 @@ public final class TimeBar extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        adventure = BukkitAudiences.create(this);
-
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             papiSupport = true;
             logger.info("PlaceholderAPI is detected! Enabling support.");
@@ -200,7 +196,7 @@ public final class TimeBar extends JavaPlugin {
             e.printStackTrace();
             return;
         }
-        GitHubRelease current = api.getReleaseByTag(this.getDescription().getVersion());
+        GitHubRelease current = api.getReleaseByTag(this.getPluginMeta().getVersion());
         GitHubRelease latest = api.getLatestVersion();
         if (current == null) {
             logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
@@ -212,13 +208,6 @@ public final class TimeBar extends JavaPlugin {
         } else {
             logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
-    }
-
-    public BukkitAudiences getAdventure() {
-        if (this.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return this.adventure;
     }
 
     public WorldTimeTracker getPlayerTracker(Player player) {
