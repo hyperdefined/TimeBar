@@ -1,12 +1,12 @@
 <h1 align="center">TimeBar</h1>
 
 <p align="center">
-	<img src="https://img.shields.io/badge/Minecraft-1.21--1.21.4-orange" alt="Minecraft versions">
-	<img src="https://img.shields.io/github/v/release/hyperdefined/TimeBar" alt="GitHub release (latest by date)">
-	<a href="https://github.com/hyperdefined/TimeBar/releases"><img src="https://img.shields.io/github/downloads/hyperdefined/TimeBar/total?logo=github" alt="Downloads"></a>
-	<a href="https://ko-fi.com/hyperdefined"><img src="https://img.shields.io/badge/Donate-Ko--fi-red" alt="Donate via Ko-fi"></a>
-	<img alt="Discord" src="https://img.shields.io/discord/1267600843356639413?style=flat&logo=discord&label=Discord">
-	<a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+	<a href="https://modrinth.com/plugin/timebar"><img alt="modrinth" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg"></a>
+	<a href="https://hangar.papermc.io/hyperdefined/TimeBar"><img alt="hangar" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/hangar_vector.svg"></a>
+	<a href="https://papermc.io"><img alt="paper" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_vector.svg"></a>
+	<a href="https://github.com/hyperdefined/timebar/wiki"><img alt="ghpages" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg"></a>
+	<a href="https://discord.gg/rJuQXVcJz8"><img alt="discord-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-singular_vector.svg"></a>
+	<a href="https://ko-fi.com/hyperdefined"><img alt="kofi-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/kofi-singular_vector.svg"></a>
 </p>
 
 TimeBar lets you visualize the current world time as a bossbar. See the time of day whenever!
