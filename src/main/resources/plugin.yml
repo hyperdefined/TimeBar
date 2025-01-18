@@ -13,7 +13,7 @@ commands:
     usage: /timebar
     permission: timebar.command
 permissions:
-  timebar.commmand:
+  timebar.command:
     default: true
     description: Allows the usage of /timebar.
   timebar.reload:
