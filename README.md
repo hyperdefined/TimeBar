@@ -4,15 +4,15 @@
 	<a href="https://modrinth.com/plugin/TimeBar"><img alt="modrinth" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg"></a>
 	<a href="https://hangar.papermc.io/hyperdefined/TimeBar"><img alt="hangar" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/hangar_vector.svg"></a>
 	<a href="https://papermc.io"><img alt="paper" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_vector.svg"></a>
-	<a href="https://github.com/hyperdefined/TimeBar/wiki"><img alt="ghpages" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg"></a>
+	<a href="https://docs.hyper.lol/plugins/timebar/about/"><img alt="ghpages" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg"></a>
 	<a href="https://discord.gg/rJuQXVcJz8"><img alt="discord-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-singular_vector.svg"></a>
 	<a href="https://buymeacoffee.com/hyperdefined"><img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg"></a>
 </p>
 
 TimeBar lets you visualize the current world time as a bossbar. See the time of day whenever!
 
-![Image](https://raw.githubusercontent.com/hyperdefined/TimeBar/master/example.gif)
-![Image](https://raw.githubusercontent.com/hyperdefined/TimeBar/master/rs-example.png)
+![Image](https://docs.hyper.lol/plugins/timebar/assets/example.gif)
+![Image](https://docs.hyper.lol/plugins/timebar/assets/rs-example.png)
 
 ## Features
 * Completely customized how the TimeBar looks.
@@ -26,7 +26,7 @@ TimeBar lets you visualize the current world time as a bossbar. See the time of 
 * Support for [AdvancedSeasons](https://www.spigotmc.org/resources/114050/).
 
 ## Documentation
-Visit the [wiki](https://github.com/hyperdefined/TimeBar/wiki) for help.
+Visit the [wiki](https://docs.hyper.lol/plugins/timebar/about/) for help.
 
 ## Support
 You can join the [Discord](https://discord.gg/rJuQXVcJz8) for support.
