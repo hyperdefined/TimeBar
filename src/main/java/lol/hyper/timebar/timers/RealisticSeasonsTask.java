@@ -17,8 +17,8 @@
 
 package lol.hyper.timebar.timers;
 
-import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.papi.PlaceholderUtil;
+import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.utils.NumberFormat;
 import me.casperge.realisticseasons.api.SeasonsAPI;
 import me.casperge.realisticseasons.calendar.Date;
@@ -37,12 +37,37 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RealisticSeasonsTask extends BukkitRunnable {
 
     private final WorldTimeTracker worldTimeTracker;
     private final SeasonsAPI seasonsAPI;
     private final World world;
+    private final Map<Character, String> formattingMap = Map.ofEntries(
+            Map.entry('0', "black"),
+            Map.entry('1', "dark_blue"),
+            Map.entry('2', "dark_green"),
+            Map.entry('3', "dark_aqua"),
+            Map.entry('4', "dark_red"),
+            Map.entry('5', "dark_purple"),
+            Map.entry('6', "gold"),
+            Map.entry('7', "gray"),
+            Map.entry('8', "dark_gray"),
+            Map.entry('9', "blue"),
+            Map.entry('a', "green"),
+            Map.entry('b', "aqua"),
+            Map.entry('c', "red"),
+            Map.entry('d', "light_purple"),
+            Map.entry('e', "yellow"),
+            Map.entry('f', "white"),
+            Map.entry('l', "b"),
+            Map.entry('m', "st"),
+            Map.entry('n', "u"),
+            Map.entry('o', "i"),
+            Map.entry('r', "reset")
+    );
 
     private DateTimeFormatter dateFormatter;
 
@@ -125,7 +150,8 @@ public class RealisticSeasonsTask extends BukkitRunnable {
 
         String colorConfig = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("colors." + currentSeason.toString().toUpperCase(Locale.ROOT));
         // load from config first
-        BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;;
+        BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;
+        ;
         if (colorConfig != null) {
             // see if the color is valid
             try {
@@ -309,7 +335,9 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         }
 
         if (title.contains("{SEASON}")) {
-            title = title.replace("{SEASON}", season.toString());
+            // RealisticSeasons returns the season with color codes, eww
+            String seasonButCorrect = convertSeason(season.toString());
+            title = title.replace("{SEASON}", seasonButCorrect + "<reset>");
         }
         if (title.contains("{DATE}")) {
             String newDate = convertedDate.format(dateFormatter);
@@ -334,5 +362,22 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             title = title.replace("{DAYPERCENT}", String.format("%.2f", progress) + "%");
         }
         return title;
+    }
+
+    private String convertSeason(String formattedSeason) {
+        Pattern pattern = Pattern.compile("[&§]([0-9a-fk-or])", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(formattedSeason);
+        StringBuilder sb = new StringBuilder();
+
+        while (matcher.find()) {
+            char code = Character.toLowerCase(matcher.group(1).charAt(0));
+            String tag = formattingMap.get(code);
+            if (tag != null) {
+                matcher.appendReplacement(sb, Matcher.quoteReplacement("<" + tag + ">"));
+            }
+        }
+
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 }
