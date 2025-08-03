@@ -104,6 +104,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         }
         // get the current season & date of the world
         Season currentSeason = this.seasonsAPI.getSeason(world);
+        String seasonName = currentSeason.getConfigName().toUpperCase(Locale.ROOT);
         Date currentDate = this.seasonsAPI.getDate(world);
         // this should be null if RealisticSeasons hasn't bet setup yet
         if (currentDate == null) {
@@ -148,7 +149,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         worldTimeTracker.setDayCount(dayCount);
         worldTimeTracker.setDayPercent(timePercent);
 
-        String colorConfig = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("colors." + currentSeason.toString().toUpperCase(Locale.ROOT));
+        String colorConfig = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("colors." + seasonName);
         // load from config first
         BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;
         ;
