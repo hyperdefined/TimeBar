@@ -17,16 +17,17 @@
 
 package lol.hyper.timebar;
 
-import lol.hyper.githubreleaseapi.GitHubRelease;
-import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
+import lol.hyper.hyperlib.HyperLib;
+import lol.hyper.hyperlib.bstats.bStats;
+import lol.hyper.hyperlib.releases.modrinth.ModrinthPlugin;
+import lol.hyper.hyperlib.releases.modrinth.ModrinthRelease;
+import lol.hyper.hyperlib.utils.TextUtils;
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.PlayerJoinLeave;
 import lol.hyper.timebar.events.WorldChange;
 import lol.hyper.timebar.papi.TimeBarExpansion;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,7 +37,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -52,11 +52,11 @@ public final class TimeBar extends JavaPlugin {
     public final Set<Player> enabledBossBar = new HashSet<>();
     public final List<WorldTimeTracker> worldTimeTrackers = new ArrayList<>();
 
-    public final MiniMessage miniMessage = MiniMessage.miniMessage();
-
     public PlayerJoinLeave playerJoinLeave;
     public WorldChange worldChange;
     public CommandTimeBar commandReload;
+    public HyperLib hyperLib;
+    public TextUtils textUtils;
 
     public boolean papiSupport = false;
     public boolean realisticSeasons = false;
@@ -65,6 +65,14 @@ public final class TimeBar extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        hyperLib = new HyperLib(this);
+        hyperLib.setup();
+
+        bStats bstats = new bStats(hyperLib, 10674);
+        bstats.setup();
+
+        textUtils = new TextUtils(hyperLib);
+
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             papiSupport = true;
             logger.info("PlaceholderAPI is detected! Enabling support.");
@@ -94,9 +102,27 @@ public final class TimeBar extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerJoinLeave, this);
         Bukkit.getServer().getPluginManager().registerEvents(worldChange, this);
 
-        new Metrics(this, 10674);
+        Bukkit.getAsyncScheduler().runNow(this, scheduledTask -> {
+            ModrinthPlugin modrinthPlugin = new ModrinthPlugin("3w9zYjq5");
+            modrinthPlugin.get();
 
-        Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
+            ModrinthRelease release = modrinthPlugin.getReleaseByVersion(this.getPluginMeta().getVersion());
+            if (release == null) {
+                logger.warning("You are running a version not published.");
+            } else {
+                int buildsBehind = modrinthPlugin.buildsVersionsBehind(release);
+                if (buildsBehind > 0) {
+                    ModrinthRelease latest = modrinthPlugin.getLatestRelease();
+                    if (latest != null) {
+                        logger.info("You are " + buildsBehind + " versions behind. Please update!");
+                        logger.info("The latest version is " + latest.getVersion());
+                        logger.info(latest.getVersionPage());
+                    }
+                } else {
+                    logger.info("Yay! You are running the latest version.");
+                }
+            }
+        });
 
         for (WorldTimeTracker worldTimeTracker : worldTimeTrackers) {
             worldTimeTracker.startTimer();
@@ -184,29 +210,6 @@ public final class TimeBar extends JavaPlugin {
             if (advancedSeasonsConfig.getInt("config-version") != ADVANCED_SEASONS_CONFIG_VERSION) {
                 logger.warning("Your /plugins/TimeBar/advancedseasons.yml configuration is out of date! Some features may not work!");
             }
-        }
-    }
-
-    public void checkForUpdates() {
-        GitHubReleaseAPI api;
-        try {
-            api = new GitHubReleaseAPI("TimeBar", "hyperdefined");
-        } catch (IOException e) {
-            logger.warning("Unable to check updates!");
-            e.printStackTrace();
-            return;
-        }
-        GitHubRelease current = api.getReleaseByTag(this.getPluginMeta().getVersion());
-        GitHubRelease latest = api.getLatestVersion();
-        if (current == null) {
-            logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
-            return;
-        }
-        int buildsBehind = api.getBuildsBehind(current);
-        if (buildsBehind == 0) {
-            logger.info("You are running the latest version.");
-        } else {
-            logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
     }
 

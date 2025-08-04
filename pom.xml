@@ -100,6 +100,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -110,15 +114,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>lol.hyper</groupId>
-            <artifactId>github-release-api</artifactId>
-            <version>1.0.5</version>
+            <groupId>com.github.hyperdefined</groupId>
+            <artifactId>hyperlib</artifactId>
+            <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

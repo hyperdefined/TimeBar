@@ -22,6 +22,7 @@ import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.utils.NumberFormat;
 import net.advancedplugins.seasons.api.AdvancedSeasonsAPI;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -84,7 +85,8 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         // get the color for the season
         String colorConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("colors." + currentSeason.toUpperCase(Locale.ROOT));
         // load from config first
-        BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;;
+        BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;
+        ;
         if (colorConfig != null) {
             // see if the color is valid
             try {
@@ -100,17 +102,19 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
             Player player = entry.getKey();
             BossBar bossBar = entry.getValue();
             int temp = api.getTemperature(player);
+            Component title;
 
             // format the title
-            String title = parseTitle(timeOfDay, dayCount, seasonFromConfig, temp, timePercent);
+            String titleRaw = parseTitle(timeOfDay, dayCount, seasonFromConfig, temp, timePercent);
 
             // format if PAPI is detected
             if (worldTimeTracker.timeBar.papiSupport) {
-                String formattedTitle = PlaceholderUtil.format(player, title);
-                bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(formattedTitle));
+                String formattedTitle = PlaceholderUtil.format(player, titleRaw);
+                title = worldTimeTracker.timeBar.textUtils.format(formattedTitle);
             } else {
-                bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(title));
+                title = worldTimeTracker.timeBar.textUtils.format(titleRaw);
             }
+            bossBar.name(title);
             bossBar.progress(progress);
             bossBar.color(color);
 

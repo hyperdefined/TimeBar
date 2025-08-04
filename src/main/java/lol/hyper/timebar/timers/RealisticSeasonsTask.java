@@ -24,6 +24,7 @@ import me.casperge.realisticseasons.api.SeasonsAPI;
 import me.casperge.realisticseasons.calendar.Date;
 import me.casperge.realisticseasons.season.Season;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -142,7 +143,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         float timePercent = progress * 100;
 
         // get the title to display for the bossbar
-        String title = parseString(world, timeString, timeOfDay, currentSeason, currentDate, timePercent);
+        String titleRaw = parseString(world, timeString, timeOfDay, currentSeason, currentDate, timePercent);
 
         // store these into the tracker
         worldTimeTracker.setTimeOfDay(timeOfDay);
@@ -167,13 +168,15 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
             Player player = entry.getKey();
             BossBar bossBar = entry.getValue();
+            Component title;
             // format if PAPI is detected
             if (worldTimeTracker.timeBar.papiSupport) {
-                String formattedTitle = PlaceholderUtil.format(player, title);
-                bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(formattedTitle));
+                String formattedTitle = PlaceholderUtil.format(player, titleRaw);
+                title = worldTimeTracker.timeBar.textUtils.format(formattedTitle);
             } else {
-                bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(title));
+                title = worldTimeTracker.timeBar.textUtils.format(titleRaw);
             }
+            bossBar.name(title);
             bossBar.progress(progress);
             bossBar.color(color);
 

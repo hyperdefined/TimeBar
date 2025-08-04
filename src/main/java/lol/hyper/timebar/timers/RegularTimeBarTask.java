@@ -21,6 +21,7 @@ import lol.hyper.timebar.papi.PlaceholderUtil;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import lol.hyper.timebar.utils.NumberFormat;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -53,19 +54,21 @@ public class RegularTimeBarTask extends BukkitRunnable {
         worldTimeTracker.setTimeOfDay(timeOfDay);
 
         // set the title
-        String title = parseTitle(timeOfDay, dayCount, timePercent);
+        String titleRaw = parseTitle(timeOfDay, dayCount, timePercent);
 
         // loop through all bossbars and format the title
         for (Map.Entry<Player, BossBar> entry : worldTimeTracker.getBossBars().entrySet()) {
             Player player = entry.getKey();
             BossBar bossBar = entry.getValue();
+            Component title;
             // format if PAPI is detected
             if (worldTimeTracker.timeBar.papiSupport) {
-                String formattedTitle = PlaceholderUtil.format(player, title);
-                bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(formattedTitle));
+                String formattedTitle = PlaceholderUtil.format(player, titleRaw);
+                title = worldTimeTracker.timeBar.textUtils.format(formattedTitle);
             } else {
-                bossBar.name(worldTimeTracker.timeBar.miniMessage.deserialize(title));
+                title = worldTimeTracker.timeBar.textUtils.format(titleRaw);
             }
+            bossBar.name(title);
             bossBar.progress(progress);
             bossBar.color(worldTimeTracker.timeBar.bossBarColor);
 
