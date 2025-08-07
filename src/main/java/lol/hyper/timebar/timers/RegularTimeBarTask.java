@@ -94,7 +94,7 @@ public class RegularTimeBarTask extends BukkitRunnable {
     private String parseTitle(String timeOfDay, int dayCount, float progress) {
         String title = worldTimeTracker.timeBar.config.getString("timebar-title");
         if (title == null) {
-            worldTimeTracker.timeBar.logger.severe("timebar-title is not set! Using default.");
+            worldTimeTracker.timeBar.logger.warn("timebar-title is not set! Using default.");
             title = "{TIME} (Day {DAYCOUNT})";
         }
 

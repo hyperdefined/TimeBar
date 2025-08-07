@@ -64,12 +64,8 @@
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>lol.hyper.timebar.bstats</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>lol.hyper.githubreleaseapi</pattern>
-                            <shadedPattern>lol.hyper.timebar.updater</shadedPattern>
+                            <pattern>lol.hyper.hyperlib</pattern>
+                            <shadedPattern>lol.hyper.timebar.hyperlib</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -116,7 +112,7 @@
         <dependency>
             <groupId>com.github.hyperdefined</groupId>
             <artifactId>hyperlib</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.9</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

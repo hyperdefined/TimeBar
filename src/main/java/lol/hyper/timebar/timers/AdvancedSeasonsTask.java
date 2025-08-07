@@ -51,9 +51,9 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
             return;
         }
         if (api == null) {
-            worldTimeTracker.timeBar.logger.severe("Unable to hook into AdvancedSeasonsAPI!");
-            worldTimeTracker.timeBar.logger.severe("Canceling AdvancedSeasonsTask, please try /timebar reload.");
-            worldTimeTracker.timeBar.logger.severe("If you keep seeing this issue, please file an issue on GitHub!");
+            worldTimeTracker.timeBar.logger.error("Unable to hook into AdvancedSeasonsAPI!");
+            worldTimeTracker.timeBar.logger.error("Canceling AdvancedSeasonsTask, please try /timebar reload.");
+            worldTimeTracker.timeBar.logger.error("If you keep seeing this issue, please file an issue on GitHub!");
             worldTimeTracker.stopTimer();
             return;
         }
@@ -66,14 +66,14 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         String timeOfDay = getTimeOfDay(time);
         String currentSeason = api.getSeason(world);
         if (currentSeason == null) {
-            worldTimeTracker.timeBar.logger.severe("Unable to read season information from world " + world.getName());
-            worldTimeTracker.timeBar.logger.severe("This world is not setup with AdvancedSeasons, canceling...");
+            worldTimeTracker.timeBar.logger.error("Unable to read season information from world {}", world.getName());
+            worldTimeTracker.timeBar.logger.error("This world is not setup with AdvancedSeasons, canceling...");
             this.cancel();
             return;
         }
         String seasonFromConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("seasons." + currentSeason);
         if (seasonFromConfig == null) {
-            worldTimeTracker.timeBar.logger.warning("seasons." + currentSeason + " does not exist in advancedseasons.yml, using default season names...");
+            worldTimeTracker.timeBar.logger.warn("seasons.{} does not exist in advancedseasons.yml, using default season names...", currentSeason);
             seasonFromConfig = currentSeason;
         }
 
@@ -86,14 +86,13 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
         String colorConfig = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("colors." + currentSeason.toUpperCase(Locale.ROOT));
         // load from config first
         BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;
-        ;
         if (colorConfig != null) {
             // see if the color is valid
             try {
                 color = BossBar.Color.valueOf(colorConfig);
             } catch (IllegalArgumentException exception) {
                 // if the color is not valid, fall back
-                worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
+                worldTimeTracker.timeBar.logger.warn("{} is not a valid color for TimeBar.", colorConfig);
             }
         }
 
@@ -142,7 +141,7 @@ public class AdvancedSeasonsTask extends BukkitRunnable {
     private String parseTitle(String timeOfDay, int dayCount, String season, int temp, float progress) {
         String title = worldTimeTracker.timeBar.advancedSeasonsConfig.getString("timebar-title");
         if (title == null) {
-            worldTimeTracker.timeBar.logger.severe("timebar-title is not set! Using default.");
+            worldTimeTracker.timeBar.logger.error("timebar-title is not set! Using default.");
             title = "{TIME} (Day {DAYCOUNT}) {SEASON} - {TEMP}";
         }
 

@@ -81,15 +81,14 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         // if these config values are missing, use the default ones
         if (dateFormat == null) {
             dateFormat = "M/dd/yyyy";
-            worldTimeTracker.timeBar.logger.warning("date-format is missing! Using default American English format.");
+            worldTimeTracker.timeBar.logger.warn("date-format is missing! Using default American English format.");
         }
 
         // test the date format
         try {
             dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         } catch (NullPointerException | IllegalArgumentException exception) {
-            worldTimeTracker.timeBar.logger.warning("date-format is NOT a valid format! Using default American English format.");
-            exception.printStackTrace();
+            worldTimeTracker.timeBar.logger.error("Invalid date format", exception);
             dateFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
         }
     }
@@ -97,9 +96,9 @@ public class RealisticSeasonsTask extends BukkitRunnable {
     @Override
     public void run() {
         if (this.seasonsAPI == null) {
-            worldTimeTracker.timeBar.logger.severe("Unable to hook into RealisticSeason!");
-            worldTimeTracker.timeBar.logger.severe("Canceling RealisticSeasonsTask, please try /timebar reload.");
-            worldTimeTracker.timeBar.logger.severe("If you keep seeing this message, please file an issue on GitHub!");
+            worldTimeTracker.timeBar.logger.error("Unable to hook into RealisticSeason!");
+            worldTimeTracker.timeBar.logger.error("Canceling RealisticSeasonsTask, please try /timebar reload.");
+            worldTimeTracker.timeBar.logger.error("If you keep seeing this message, please file an issue on GitHub!");
             this.cancel();
             return;
         }
@@ -109,10 +108,10 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         Date currentDate = this.seasonsAPI.getDate(world);
         // this should be null if RealisticSeasons hasn't bet setup yet
         if (currentDate == null) {
-            worldTimeTracker.timeBar.logger.severe("Cannot retrieve date from RealisticSeasons for world " + world.getName());
-            worldTimeTracker.timeBar.logger.severe("Most likely means you did not setup RS for that defined world.");
-            worldTimeTracker.timeBar.logger.severe("Enter the world and type '/rs set <season>'");
-            worldTimeTracker.timeBar.logger.severe("After you setup the season, you can run '/timebar reload'");
+            worldTimeTracker.timeBar.logger.error("Cannot retrieve date from RealisticSeasons for world {}", world.getName());
+            worldTimeTracker.timeBar.logger.error("Most likely means you did not setup RS for that defined world.");
+            worldTimeTracker.timeBar.logger.error("Enter the world and type '/rs set <season>'");
+            worldTimeTracker.timeBar.logger.error("After you setup the season, you can run '/timebar reload'");
             this.cancel();
             return;
         }
@@ -153,14 +152,13 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         String colorConfig = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("colors." + seasonName);
         // load from config first
         BossBar.Color color = worldTimeTracker.timeBar.bossBarColor;
-        ;
         if (colorConfig != null) {
             // see if the color is valid
             try {
                 color = BossBar.Color.valueOf(colorConfig);
             } catch (IllegalArgumentException exception) {
                 // if the color is not valid, fall back
-                worldTimeTracker.timeBar.logger.warning(colorConfig + " is not a valid color for TimeBar.");
+                worldTimeTracker.timeBar.logger.warn("{} is not a valid color for TimeBar.", colorConfig);
             }
         }
 
@@ -202,14 +200,14 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         String monthLowerCase = month.toLowerCase(Locale.ROOT);
         ConfigurationSection monthSection = worldTimeTracker.timeBar.realisticSeasonsConfig.getConfigurationSection("month." + monthLowerCase);
         if (monthSection == null) {
-            worldTimeTracker.timeBar.logger.severe("Section " + "month." + monthLowerCase + " does NOT EXIST!");
+            worldTimeTracker.timeBar.logger.error("Section month.{} does NOT EXIST!", monthLowerCase);
             return "INVALID";
         }
 
         //dawn
         String dawn = monthSection.getString("dawn");
         if (dawn == null) {
-            worldTimeTracker.timeBar.logger.severe("month." + monthLowerCase + ".dawn is NOT SET!");
+            worldTimeTracker.timeBar.logger.error("month.{}.dawn is NOT SET!", monthLowerCase);
             return "INVALID";
         }
         LocalTime dawnTime = LocalTime.parse(dawn);
@@ -217,7 +215,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //morning
         String morning = monthSection.getString("morning");
         if (morning == null) {
-            worldTimeTracker.timeBar.logger.severe("month." + monthLowerCase + ".morning is NOT SET!");
+            worldTimeTracker.timeBar.logger.error("month.{}.morning is NOT SET!", monthLowerCase);
             return "INVALID";
         }
         LocalTime morningTime = LocalTime.parse(morning);
@@ -225,7 +223,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //noon
         String noon = monthSection.getString("noon");
         if (noon == null) {
-            worldTimeTracker.timeBar.logger.severe("month." + monthLowerCase + ".noon is NOT SET!");
+            worldTimeTracker.timeBar.logger.error("month.{}.noon is NOT SET!", monthLowerCase);
             return "INVALID";
         }
         LocalTime noonTime = LocalTime.parse(noon);
@@ -233,7 +231,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //afternoon
         String afternoon = monthSection.getString("afternoon");
         if (afternoon == null) {
-            worldTimeTracker.timeBar.logger.severe("month." + monthLowerCase + ".afternoon is NOT SET!");
+            worldTimeTracker.timeBar.logger.error("month.{}.afternoon is NOT SET!", monthLowerCase);
             return "INVALID";
         }
         LocalTime afternoonTime = LocalTime.parse(afternoon);
@@ -241,7 +239,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //sunset
         String sunset = monthSection.getString("sunset");
         if (sunset == null) {
-            worldTimeTracker.timeBar.logger.severe("month." + monthLowerCase + ".sunset is NOT SET!");
+            worldTimeTracker.timeBar.logger.error("month.{}.sunset is NOT SET!", monthLowerCase);
             return "INVALID";
         }
         LocalTime sunsetTime = LocalTime.parse(sunset);
@@ -249,7 +247,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //night
         String night = monthSection.getString("night");
         if (night == null) {
-            worldTimeTracker.timeBar.logger.severe("month." + monthLowerCase + ".night is NOT SET!");
+            worldTimeTracker.timeBar.logger.error("month.{}.night is NOT SET!", monthLowerCase);
             return "INVALID";
         }
         LocalTime nightTime = LocalTime.parse(night);
@@ -257,7 +255,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
         //midnight
         String midnight = monthSection.getString("midnight");
         if (midnight == null) {
-            worldTimeTracker.timeBar.logger.severe("month." + monthLowerCase + ".midnight is NOT SET!");
+            worldTimeTracker.timeBar.logger.error("month.{}.midnight is NOT SET!", monthLowerCase);
             return "INVALID";
         }
         LocalTime midnightTime = LocalTime.parse(midnight);
@@ -291,7 +289,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             return worldTimeTracker.timeBar.realisticSeasonsConfig.getString("times.night");
         }
 
-        worldTimeTracker.timeBar.logger.severe("Unable to find suitable time for " + currentWorldTime);
+        worldTimeTracker.timeBar.logger.error("Unable to find suitable time for {}", currentWorldTime);
         return "INVALID";
     }
 
@@ -316,7 +314,7 @@ public class RealisticSeasonsTask extends BukkitRunnable {
             title = worldTimeTracker.timeBar.realisticSeasonsConfig.getString("timebar-title");
         }
         if (title == null) {
-            worldTimeTracker.timeBar.logger.severe("timebar-title is not set! Using default.");
+            worldTimeTracker.timeBar.logger.warn("timebar-title is not set! Using default.");
             title = "{TIME} - {TIME-WORD} ({DATE}) - {SEASON}";
         }
         String worldTime;

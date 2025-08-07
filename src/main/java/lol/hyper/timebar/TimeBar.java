@@ -18,9 +18,8 @@
 package lol.hyper.timebar;
 
 import lol.hyper.hyperlib.HyperLib;
-import lol.hyper.hyperlib.bstats.bStats;
-import lol.hyper.hyperlib.releases.modrinth.ModrinthPlugin;
-import lol.hyper.hyperlib.releases.modrinth.ModrinthRelease;
+import lol.hyper.hyperlib.bstats.HyperStats;
+import lol.hyper.hyperlib.releases.HyperUpdater;
 import lol.hyper.hyperlib.utils.TextUtils;
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.PlayerJoinLeave;
@@ -28,6 +27,7 @@ import lol.hyper.timebar.events.WorldChange;
 import lol.hyper.timebar.papi.TimeBarExpansion;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,14 +38,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
-import java.util.logging.Logger;
 
 public final class TimeBar extends JavaPlugin {
 
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public final File realisticSeasonsConfigFile = new File(this.getDataFolder(), "realisticseasons.yml");
     public final File advancedSeasonsConfigFile = new File(this.getDataFolder(), "advancedseasons.yml");
-    public final Logger logger = this.getLogger();
+    public final ComponentLogger logger = this.getComponentLogger();
     public FileConfiguration config;
     public FileConfiguration realisticSeasonsConfig;
     public FileConfiguration advancedSeasonsConfig;
@@ -68,7 +67,7 @@ public final class TimeBar extends JavaPlugin {
         hyperLib = new HyperLib(this);
         hyperLib.setup();
 
-        bStats bstats = new bStats(hyperLib, 10674);
+        HyperStats bstats = new HyperStats(hyperLib, 10674);
         bstats.setup();
 
         textUtils = new TextUtils(hyperLib);
@@ -80,7 +79,7 @@ public final class TimeBar extends JavaPlugin {
             if (expansion.register()) {
                 logger.info("Successfully registered placeholders!");
             } else {
-                logger.warning("Unable to register placeholders!");
+                logger.warn("Unable to register placeholders!");
             }
         }
         if (Bukkit.getPluginManager().getPlugin("RealisticSeasons") != null) {
@@ -102,27 +101,11 @@ public final class TimeBar extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerJoinLeave, this);
         Bukkit.getServer().getPluginManager().registerEvents(worldChange, this);
 
-        Bukkit.getAsyncScheduler().runNow(this, scheduledTask -> {
-            ModrinthPlugin modrinthPlugin = new ModrinthPlugin("3w9zYjq5");
-            modrinthPlugin.get();
-
-            ModrinthRelease release = modrinthPlugin.getReleaseByVersion(this.getPluginMeta().getVersion());
-            if (release == null) {
-                logger.warning("You are running a version not published.");
-            } else {
-                int buildsBehind = modrinthPlugin.buildsVersionsBehind(release);
-                if (buildsBehind > 0) {
-                    ModrinthRelease latest = modrinthPlugin.getLatestRelease();
-                    if (latest != null) {
-                        logger.info("You are " + buildsBehind + " versions behind. Please update!");
-                        logger.info("The latest version is " + latest.getVersion());
-                        logger.info(latest.getVersionPage());
-                    }
-                } else {
-                    logger.info("Yay! You are running the latest version.");
-                }
-            }
-        });
+        HyperUpdater updater = new HyperUpdater(hyperLib);
+        updater.setGitHub("hyperdefined", "TimeBar");
+        updater.setModrinth("3w9zYjq5");
+        updater.setHangar("TimeBar", "paper");
+        updater.check();
 
         for (WorldTimeTracker worldTimeTracker : worldTimeTrackers) {
             worldTimeTracker.startTimer();
@@ -136,17 +119,17 @@ public final class TimeBar extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(configFile);
         int CONFIG_VERSION = 5;
         if (config.getInt("config-version") != CONFIG_VERSION) {
-            logger.warning("You configuration is out of date! Some features may not work!");
+            logger.warn("You configuration is out of date! Some features may not work!");
             // don't feel like adding a config updater
             if (config.getInt("config-version") == 3) {
-                logger.warning("The configuration system has changed for this version. Please delete your configs and restart the server.");
+                logger.warn("The configuration system has changed for this version. Please delete your configs and restart the server.");
             }
         }
 
         // make sure there are worlds on the list
         ConfigurationSection worldsSection = config.getConfigurationSection("worlds");
         if (worldsSection == null) {
-            logger.severe("No worlds section found in config! Plugin is unable to function.");
+            logger.error("No worlds section found in config! Plugin is unable to function.");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -157,7 +140,7 @@ public final class TimeBar extends JavaPlugin {
             World mainWorld = Bukkit.getWorld(worldName);
             // skip if the world is invalid
             if (mainWorld == null) {
-                logger.warning(worldName + " is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'");
+                logger.warn("{} is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'", worldName);
                 continue;
             }
             // these are the worlds to display the timebar based on this world
@@ -168,7 +151,7 @@ public final class TimeBar extends JavaPlugin {
                 if (world != null) {
                     displayWorlds.add(world);
                 } else {
-                    logger.warning(worldName + " is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'");
+                    logger.warn("{} is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'", worldName);
                 }
             }
 
@@ -186,7 +169,7 @@ public final class TimeBar extends JavaPlugin {
             try {
                 bossBarColor = BossBar.Color.valueOf(color);
             } catch (IllegalArgumentException exception) {
-                logger.warning(color + " is not a valid bossbar color. Defaulting to blue.");
+                logger.warn("{} is not a valid bossbar color. Defaulting to blue.", color);
                 bossBarColor = BossBar.Color.BLUE;
             }
         }
@@ -198,7 +181,7 @@ public final class TimeBar extends JavaPlugin {
             realisticSeasonsConfig = YamlConfiguration.loadConfiguration(realisticSeasonsConfigFile);
             int REALISTIC_SEASONS_CONFIG_VERSION = 4;
             if (realisticSeasonsConfig.getInt("config-version") != REALISTIC_SEASONS_CONFIG_VERSION) {
-                logger.warning("Your /plugins/TimeBar/realisticseasons.yml configuration is out of date! Some features may not work!");
+                logger.warn("Your /plugins/TimeBar/realisticseasons.yml configuration is out of date! Some features may not work!");
             }
         }
         if (advancedSeasons) {
@@ -208,7 +191,7 @@ public final class TimeBar extends JavaPlugin {
             advancedSeasonsConfig = YamlConfiguration.loadConfiguration(advancedSeasonsConfigFile);
             int ADVANCED_SEASONS_CONFIG_VERSION = 1;
             if (advancedSeasonsConfig.getInt("config-version") != ADVANCED_SEASONS_CONFIG_VERSION) {
-                logger.warning("Your /plugins/TimeBar/advancedseasons.yml configuration is out of date! Some features may not work!");
+                logger.warn("Your /plugins/TimeBar/advancedseasons.yml configuration is out of date! Some features may not work!");
             }
         }
     }

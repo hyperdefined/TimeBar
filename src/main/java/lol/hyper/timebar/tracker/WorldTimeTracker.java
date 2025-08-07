@@ -111,23 +111,23 @@ public class WorldTimeTracker {
         String allWorldNames = worldGroup.stream().map(World::getName).collect(Collectors.joining(", "));
         if (timeBar.realisticSeasons) {
             timeBarTask = new RealisticSeasonsTask(this).runTaskTimer(timeBar, 200, updateFrequency);
-            timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'" + " (RealisticSeasons support)");
-            timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
+            timeBar.logger.info("Starting time tracker for '{}' (RealisticSeasons support)", mainWorld.getName());
+            timeBar.logger.info("Display worlds: [{}]", allWorldNames);
         } else if (timeBar.advancedSeasons) {
             timeBarTask = new AdvancedSeasonsTask(this).runTaskTimer(timeBar, 200, updateFrequency);
-            timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'" + " (AdvancedSeasons support)");
-            timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
+            timeBar.logger.info("Starting time tracker for '{}' (AdvancedSeasons support)", mainWorld.getName());
+            timeBar.logger.info("Display worlds: [{}]", allWorldNames);
         } else {
             timeBarTask = new RegularTimeBarTask(this).runTaskTimer(timeBar, 0, updateFrequency);
-            timeBar.logger.info("Starting time tracker for '" + mainWorld.getName() + "'");
-            timeBar.logger.info("Display worlds: [" + allWorldNames + "]");
+            timeBar.logger.info("Starting time tracker for '{}'", mainWorld.getName());
+            timeBar.logger.info("Display worlds: [{}]", allWorldNames);
         }
     }
 
     public void stopTimer() {
         // stop the tracker
         timeBarTask.cancel();
-        timeBar.logger.info("Stopping current TimeBar task for '" + mainWorld.getName() + "'");
+        timeBar.logger.info("Stopping current TimeBar task for '{}'", mainWorld.getName());
     }
 
     public boolean running() {

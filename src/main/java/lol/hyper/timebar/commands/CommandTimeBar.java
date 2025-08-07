@@ -35,7 +35,7 @@ import java.util.List;
 
 public class CommandTimeBar implements TabExecutor {
 
-    private final TimeBar timeBar;;
+    private final TimeBar timeBar;
 
     public CommandTimeBar(TimeBar timeBar) {
         this.timeBar = timeBar;
@@ -44,7 +44,7 @@ public class CommandTimeBar implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Component.text("TimeBar version " + timeBar.getDescription().getVersion() + ". Created by hyperdefined.", NamedTextColor.GREEN));
+            sender.sendMessage(Component.text("TimeBar version " + timeBar.getPluginMeta().getVersion() + ". Created by hyperdefined.", NamedTextColor.GREEN));
             return true;
         }
 
@@ -137,7 +137,7 @@ public class CommandTimeBar implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String @NotNull [] args) {
         return Arrays.asList("reload", "on", "off");
     }
 }
