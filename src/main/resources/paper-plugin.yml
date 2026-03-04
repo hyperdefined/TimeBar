@@ -7,11 +7,9 @@ website: https://github.com/hyperdefined/TimeBar
 description: See the world's time as a bossbar.
 softdepend: [Multiverse-Core, RealisticSeasons, AdvancedSeasons, PlaceholderAPI]
 load: POSTWORLD
-commands:
-  timebar:
-    aliases: [tb]
-    usage: /timebar
-    permission: timebar.command
+
+loader: lol.hyper.timebar.TimeBarLoader
+
 permissions:
   timebar.command:
     default: true
@@ -25,3 +23,18 @@ permissions:
   timebar.disable:
     default: true
     description: Allows the usage of /timebar off.
+
+dependencies:
+  server:
+    Multiverse-Core:
+      load: AFTER
+      required: false
+    RealisticSeasons:
+      load: AFTER
+      required: false
+    AdvancedSeasons:
+      load: AFTER
+      required: false
+    PlaceholderAPI:
+      load: AFTER
+      required: false

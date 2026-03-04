@@ -53,7 +53,7 @@ public final class TimeBar extends JavaPlugin {
 
     public PlayerJoinLeave playerJoinLeave;
     public WorldChange worldChange;
-    public CommandTimeBar commandReload;
+    public CommandTimeBar commandTimeBar;
     public HyperLib hyperLib;
     public TextUtils textUtils;
 
@@ -94,9 +94,9 @@ public final class TimeBar extends JavaPlugin {
         loadConfig();
         playerJoinLeave = new PlayerJoinLeave(this);
         worldChange = new WorldChange(this);
-        commandReload = new CommandTimeBar(this);
+        commandTimeBar = new CommandTimeBar(this);
 
-        this.getCommand("timebar").setExecutor(commandReload);
+        registerCommand("timebar", commandTimeBar);
 
         Bukkit.getServer().getPluginManager().registerEvents(playerJoinLeave, this);
         Bukkit.getServer().getPluginManager().registerEvents(worldChange, this);

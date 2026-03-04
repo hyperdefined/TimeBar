@@ -29,7 +29,7 @@
     <name>TimeBar</name>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -56,27 +56,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>lol.hyper.hyperlib</pattern>
-                            <shadedPattern>lol.hyper.timebar.hyperlib</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -113,7 +92,7 @@
             <groupId>com.github.hyperdefined</groupId>
             <artifactId>hyperlib</artifactId>
             <version>1.0.9</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.casperge.realisticseasons</groupId>

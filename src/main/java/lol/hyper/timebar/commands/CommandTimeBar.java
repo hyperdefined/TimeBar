@@ -17,23 +17,22 @@
 
 package lol.hyper.timebar.commands;
 
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lol.hyper.timebar.TimeBar;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-public class CommandTimeBar implements TabExecutor {
+public class CommandTimeBar implements BasicCommand {
 
     private final TimeBar timeBar;
 
@@ -42,15 +41,11 @@ public class CommandTimeBar implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void execute(@NonNull CommandSourceStack source, String @NonNull [] args) {
+        CommandSender sender = source.getSender();
         if (args.length == 0) {
             sender.sendMessage(Component.text("TimeBar version " + timeBar.getPluginMeta().getVersion() + ". Created by hyperdefined.", NamedTextColor.GREEN));
-            return true;
-        }
-
-        if (!sender.hasPermission("timebar.command")) {
-            sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-            return true;
+            return;
         }
 
         switch (args[0]) {
@@ -75,20 +70,20 @@ public class CommandTimeBar implements TabExecutor {
                 } else {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                 }
-                return true;
+                return;
             }
             case "on" -> {
                 if (sender instanceof ConsoleCommandSender) {
                     sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (!sender.hasPermission("timebar.enable")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (timeBar.config.getBoolean("hold-clock-to-show")) {
                     sender.sendMessage(Component.text("You must be holding a clock to show/hide the TimeBar.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 Player player = (Player) sender;
                 World world = player.getWorld();
@@ -102,20 +97,20 @@ public class CommandTimeBar implements TabExecutor {
                     timeBar.enabledBossBar.add(player);
                 }
                 player.sendMessage(Component.text("TimeBar is now enabled.", NamedTextColor.GREEN));
-                return true;
+                return;
             }
             case "off" -> {
                 if (sender instanceof ConsoleCommandSender) {
                     sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (!sender.hasPermission("timebar.disable")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (timeBar.config.getBoolean("hold-clock-to-show")) {
                     sender.sendMessage(Component.text("You must be holding a clock to show/hide the TimeBar.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 Player player = (Player) sender;
                 World world = player.getWorld();
@@ -129,15 +124,29 @@ public class CommandTimeBar implements TabExecutor {
                     timeBar.enabledBossBar.remove(player);
                 }
                 player.sendMessage(Component.text("TimeBar is now disabled.", NamedTextColor.GREEN));
-                return true;
+                return;
             }
             default -> sender.sendMessage(Component.text("Invalid sub-command. Valid options are: reload, on, off.", NamedTextColor.RED));
         }
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String @NotNull [] args) {
-        return Arrays.asList("reload", "on", "off");
+    public @NonNull Collection<String> suggest(@NonNull CommandSourceStack source, String[] args) {
+        CommandSender sender = source.getSender();
+        if (args.length == 1) {
+            List<String> suggestions = new ArrayList<>();
+            if (sender.hasPermission("timebar.reload")) {
+                suggestions.add("reload");
+            }
+            if (sender.hasPermission("timebar.enable")) {
+                suggestions.add("on");
+            }
+            if (sender.hasPermission("timebar.disable")) {
+                suggestions.add("off");
+            }
+            return suggestions;
+        }
+        return Collections.emptyList();
     }
 }
