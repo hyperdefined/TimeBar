@@ -22,7 +22,7 @@ dependencies {
 }
 
 group = "lol.hyper"
-version = "1.4.8-hotfix"
+version = "1.4.9"
 description = "TimeBar"
 java.sourceCompatibility = JavaVersion.VERSION_25
 
