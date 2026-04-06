@@ -1,7 +1,7 @@
 name: TimeBar
-version: ${project.version}
+version: ${version}
 main: lol.hyper.timebar.TimeBar
-api-version: 1.21
+api-version: '26.1.1'
 author: hyperdefined
 website: https://github.com/hyperdefined/TimeBar
 description: See the world's time as a bossbar.

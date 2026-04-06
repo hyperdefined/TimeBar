@@ -31,7 +31,7 @@ public class TimeBarLoader implements PluginLoader {
         MavenLibraryResolver resolver = new MavenLibraryResolver();
 
         resolver.addRepository(new RemoteRepository.Builder("jitpack", "default", "https://jitpack.io").build());
-        resolver.addDependency(new Dependency(new DefaultArtifact("com.github.hyperdefined:hyperlib:1.0.9"), null));
+        resolver.addDependency(new Dependency(new DefaultArtifact("com.github.hyperdefined:hyperlib:jar:all:1.0.14"), null));
 
         classpathBuilder.addLibrary(resolver);
     }
