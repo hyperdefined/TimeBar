@@ -70,7 +70,6 @@ public class CommandTimeBar implements BasicCommand {
                 } else {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                 }
-                return;
             }
             case "on" -> {
                 if (sender instanceof ConsoleCommandSender) {
@@ -97,7 +96,6 @@ public class CommandTimeBar implements BasicCommand {
                     timeBar.enabledBossBar.add(player);
                 }
                 player.sendMessage(Component.text("TimeBar is now enabled.", NamedTextColor.GREEN));
-                return;
             }
             case "off" -> {
                 if (sender instanceof ConsoleCommandSender) {
@@ -124,11 +122,9 @@ public class CommandTimeBar implements BasicCommand {
                     timeBar.enabledBossBar.remove(player);
                 }
                 player.sendMessage(Component.text("TimeBar is now disabled.", NamedTextColor.GREEN));
-                return;
             }
             default -> sender.sendMessage(Component.text("Invalid sub-command. Valid options are: reload, on, off.", NamedTextColor.RED));
         }
-        return;
     }
 
     @Override
