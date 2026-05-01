@@ -53,18 +53,29 @@ public class CommandTimeBar implements BasicCommand {
                 if (sender.hasPermission("timebar.reload")) {
                     // this is a bit ugly, but it should be done in this order
                     // hide the bossbars, reload config, then start them again
-                    for (WorldTimeTracker worldTimeTracker : timeBar.worldTimeTrackers) {
-                        worldTimeTracker.hideBossBars();
-                        worldTimeTracker.stopTimer();
+                    for (WorldTimeTracker tracker : timeBar.worldTimeTrackers.values()) {
+                        tracker.removePlayers();
+                        tracker.stopTimer();
                     }
-                    timeBar.worldTimeTrackers.clear();
                     timeBar.loadConfig();
+
+                    // remake all trackers
+                    for (String mainWorldName : timeBar.configuredWorlds.keySet()) {
+                        World mainWorld = Bukkit.getWorld(mainWorldName);
+
+                        if (mainWorld != null) {
+                            timeBar.worldLoad.makeTracker(mainWorld, false);
+                        }
+                    }
+
                     // add all players online back into trackers
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().ifPresent(tracker -> tracker.addPlayer(player));
-                    }
-                    for (WorldTimeTracker worldTimeTracker : timeBar.worldTimeTrackers) {
-                        worldTimeTracker.startTimer();
+                        WorldTimeTracker tracker = timeBar.getPlayerTracker(player);
+
+                        if (tracker != null) {
+                            tracker.startTimer();
+                            tracker.addPlayer(player);
+                        }
                     }
                     sender.sendMessage(Component.text("Configuration reloaded!", NamedTextColor.GREEN));
                 } else {
@@ -88,7 +99,7 @@ public class CommandTimeBar implements BasicCommand {
                 World world = player.getWorld();
 
                 // show them the bossbar
-                WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(world)).findFirst().orElse(null);
+                WorldTimeTracker tracker = timeBar.worldTimeTrackers.get(world.getName());
                 // showPlayer will add them to the list, but if their world doesn't have a tracker, add them manually
                 if (tracker != null) {
                     tracker.showPlayer(player);
@@ -114,7 +125,7 @@ public class CommandTimeBar implements BasicCommand {
                 World world = player.getWorld();
 
                 // hide the bossbar
-                WorldTimeTracker tracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(world)).findFirst().orElse(null);
+                WorldTimeTracker tracker = timeBar.worldTimeTrackers.get(world.getName());
                 // hidePlayer will remove them from the list, but if their world doesn't have a tracker, remove them manually
                 if (tracker != null) {
                     tracker.hidePlayer(player);

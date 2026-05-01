@@ -41,36 +41,42 @@ public class WorldChange implements Listener {
         World oldWorld = event.getFrom();
 
         // get tracker from old location
-        WorldTimeTracker oldTracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(oldWorld)).findFirst().orElse(null);
+        WorldTimeTracker oldTracker = timeBar.getTracker(oldWorld);
         // get tracker for new location
-        WorldTimeTracker newTracker = timeBar.worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(newWorld)).findFirst().orElse(null);
+        WorldTimeTracker newTracker = timeBar.getTracker(newWorld);
+
+        if (oldTracker == newTracker) {
+            return;
+        }
+
         // if the old world had a tracker
         if (oldTracker != null) {
-            // if they moved to a new tracker group
-            if (!oldTracker.worldGroup().contains(newWorld)) {
-                oldTracker.removePlayer(player);
-                // if the new world has a tracker, add them
-                if (newTracker != null) {
-                    newTracker.addPlayer(player);
-                    // perform the swap
-                    if (!newTracker.running()) {
-                        newTracker.startTimer();
-                    }
-                }
-                // if we moved and the old world has no players, stop tracking
-                if (oldTracker.getBossBars().isEmpty()) {
-                    oldTracker.stopTimer();
-                }
+            // when the tracker has no one, stop it
+            oldTracker.removePlayer(player);
+            if (oldTracker.getBossBars().isEmpty()) {
+                oldTracker.stopTimer();
             }
-        } else {
-            // player is coming from a world that doesn't have a tracker
-            // if the new world has a tracker, add them
-            if (newTracker != null) {
-                newTracker.addPlayer(player);
-                // if the world they move to is not tracking, start it
-                if (!newTracker.running()) {
-                    newTracker.startTimer();
-                }
+        }
+
+        // if the new world has a tracker, add them
+        if (newTracker != null) {
+            newTracker.addPlayer(player);
+            // if the tracker is not running, start it
+            if (!newTracker.running()) {
+                newTracker.startTimer();
+            }
+
+            return;
+        }
+
+        // if the world moving to does not have a tracker
+        // and it's on the list, make a tracker
+        if (timeBar.configuredWorlds.containsKey(player.getWorld().getName())) {
+            timeBar.worldLoad.makeTracker(player.getWorld(), true);
+
+            WorldTimeTracker tracker = timeBar.getPlayerTracker(player);
+            if (tracker != null) {
+                tracker.addPlayer(player);
             }
         }
     }

@@ -51,6 +51,15 @@ public class PlayerJoinLeave implements Listener {
             if (!tracker.running()) {
                 tracker.startTimer();
             }
+        } else {
+            // since there is no tracker, check to see if we need one
+            if (timeBar.configuredWorlds.containsKey(player.getWorld().getName())) {
+                timeBar.worldLoad.makeTracker(player.getWorld(), true);
+                tracker = timeBar.getPlayerTracker(player);
+                if (tracker != null) {
+                    tracker.addPlayer(player);
+                }
+            }
         }
     }
 

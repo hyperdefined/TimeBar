@@ -24,6 +24,7 @@ import lol.hyper.hyperlib.utils.TextUtils;
 import lol.hyper.timebar.commands.CommandTimeBar;
 import lol.hyper.timebar.events.PlayerJoinLeave;
 import lol.hyper.timebar.events.WorldChange;
+import lol.hyper.timebar.events.WorldLoad;
 import lol.hyper.timebar.papi.TimeBarExpansion;
 import lol.hyper.timebar.tracker.WorldTimeTracker;
 import net.kyori.adventure.bossbar.BossBar;
@@ -49,10 +50,12 @@ public final class TimeBar extends JavaPlugin {
     public FileConfiguration realisticSeasonsConfig;
     public FileConfiguration advancedSeasonsConfig;
     public final Set<Player> enabledBossBar = new HashSet<>();
-    public final List<WorldTimeTracker> worldTimeTrackers = new ArrayList<>();
+    public final Map<String, WorldTimeTracker> worldTimeTrackers = new HashMap<>();
+    public final Map<String, List<String>> configuredWorlds = new HashMap<>();
 
     public PlayerJoinLeave playerJoinLeave;
     public WorldChange worldChange;
+    public WorldLoad worldLoad;
     public CommandTimeBar commandTimeBar;
     public HyperLib hyperLib;
     public TextUtils textUtils;
@@ -94,22 +97,20 @@ public final class TimeBar extends JavaPlugin {
         loadConfig();
         playerJoinLeave = new PlayerJoinLeave(this);
         worldChange = new WorldChange(this);
+        worldLoad = new WorldLoad(this);
         commandTimeBar = new CommandTimeBar(this);
 
         registerCommand("timebar", commandTimeBar);
 
         Bukkit.getServer().getPluginManager().registerEvents(playerJoinLeave, this);
         Bukkit.getServer().getPluginManager().registerEvents(worldChange, this);
+        Bukkit.getServer().getPluginManager().registerEvents(worldLoad, this);
 
         HyperUpdater updater = new HyperUpdater(hyperLib);
         updater.setGitHub("hyperdefined", "TimeBar");
         updater.setModrinth("3w9zYjq5");
         updater.setHangar("TimeBar", "paper");
         updater.check();
-
-        for (WorldTimeTracker worldTimeTracker : worldTimeTrackers) {
-            worldTimeTracker.startTimer();
-        }
     }
 
     public void loadConfig() {
@@ -134,29 +135,13 @@ public final class TimeBar extends JavaPlugin {
             return;
         }
 
-        Set<String> worldKeys = worldsSection.getKeys(false);
-        // loop through the worlds section and find the worlds under it
-        for (String worldName : worldKeys) {
-            World mainWorld = Bukkit.getWorld(worldName);
-            // skip if the world is invalid
-            if (mainWorld == null) {
-                logger.warn("{} is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'", worldName);
-                continue;
-            }
-            // these are the worlds to display the timebar based on this world
-            List<String> displayWorldNames = config.getStringList("worlds." + worldName);
-            List<World> displayWorlds = new ArrayList<>();
-            for (String name : displayWorldNames) {
-                World world = Bukkit.getWorld(name);
-                if (world != null) {
-                    displayWorlds.add(world);
-                } else {
-                    logger.warn("{} is not a valid world, skipping. If it is a valid world, wait for your server to load then try '/timebar reload'", worldName);
-                }
-            }
+        // cleanup for reload
+        worldTimeTrackers.clear();
+        configuredWorlds.clear();
 
-            WorldTimeTracker worldTimeTracker = new WorldTimeTracker(this, mainWorld, displayWorlds);
-            worldTimeTrackers.add(worldTimeTracker);
+        Set<String> worldKeys = worldsSection.getKeys(false);
+        for (String world : worldKeys) {
+            configuredWorlds.put(world, config.getStringList("worlds." + world));
         }
 
         String color = config.getString("titlebar-color");
@@ -197,6 +182,22 @@ public final class TimeBar extends JavaPlugin {
     }
 
     public WorldTimeTracker getPlayerTracker(Player player) {
-        return worldTimeTrackers.stream().filter(worldTimeTracker -> worldTimeTracker.worldGroup().contains(player.getWorld())).findFirst().orElse(null);
+        World world = player.getWorld();
+
+        return worldTimeTrackers.values().stream()
+                .filter(tracker -> tracker.getMainWorld().equals(world)
+                        || tracker.worldGroup().contains(world))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public WorldTimeTracker getTracker(World world) {
+        for (WorldTimeTracker tracker : worldTimeTrackers.values()) {
+            if (tracker.worldGroup().contains(world)) {
+                return tracker;
+            }
+        }
+
+        return null;
     }
 }

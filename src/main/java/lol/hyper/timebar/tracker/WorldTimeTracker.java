@@ -80,6 +80,8 @@ public class WorldTimeTracker {
         BossBar bossBar = BossBar.bossBar(Component.text("Loading world time..."), 0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
         bossBars.put(player, bossBar);
 
+        timeBar.logger.info("adding player {}", player);
+
         // honor worlds to display in
         // they are in a display world, show them timebar
         if (worldGroup.contains(player.getWorld())) {
@@ -102,10 +104,26 @@ public class WorldTimeTracker {
     }
 
     /**
+     * Remove all players from this tracker.
+     */
+    public void removePlayers() {
+        for (Player player : bossBars.keySet()) {
+            BossBar bossBar = bossBars.get(player);
+            player.hideBossBar(bossBar);
+        }
+        bossBars.clear();
+    }
+
+    /**
      * Start tracking time for main world defined in this tracker.
      * This also will update bossbars for any players on this tracker.
      */
     public void startTimer() {
+        // already running
+        if (timeBarTask != null) {
+            timeBar.logger.warn("Timer for world {} tried to start again while running!", mainWorld.getName());
+            return;
+        }
         // start the tracker
         int updateFrequency = timeBar.config.getInt("bar-update-frequency");
         String allWorldNames = worldGroup.stream().map(World::getName).collect(Collectors.joining(", "));
@@ -125,13 +143,19 @@ public class WorldTimeTracker {
     }
 
     public void stopTimer() {
+        if (timeBarTask == null) {
+            return;
+        }
+
         // stop the tracker
         timeBarTask.cancel();
+        timeBarTask = null;
+
         timeBar.logger.info("Stopping current TimeBar task for '{}'", mainWorld.getName());
     }
 
     public boolean running() {
-        return !timeBarTask.isCancelled();
+        return timeBarTask != null && !timeBarTask.isCancelled();
     }
 
     /**
@@ -145,6 +169,7 @@ public class WorldTimeTracker {
             }
             BossBar bossBar = entry.getValue();
             player.hideBossBar(bossBar);
+            timeBar.logger.info("hiding for {}", player);
         }
     }
 
@@ -200,5 +225,15 @@ public class WorldTimeTracker {
 
     public String getTimeOfDay() {
         return timeOfDay;
+    }
+
+    /**
+     * Add a world to the display worlds.
+     * @param world World to add.
+     */
+    public void addDisplay(World world) {
+        if (!worldGroup.contains(world)) {
+            worldGroup.add(world);
+        }
     }
 }
